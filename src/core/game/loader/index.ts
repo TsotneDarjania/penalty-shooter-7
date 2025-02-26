@@ -1,60 +1,80 @@
-import {Assets, Container, Graphics} from "pixi.js";
+import { Assets, Graphics } from "pixi.js";
 import LoadingBar from "./loadingBar";
+import { GameView } from "../GameView";
+import { CustomSprite } from "../../components/customSprite";
 
 export type AssetInfo = {
-    src: string;
-    data?: {
-        scaleMode?: string;
-        autoGenerateMipMaps?: boolean;
-        resolution?: number;
-    };
+  src: string;
+  data?: {
+    scaleMode?: string;
+    autoGenerateMipMaps?: boolean;
+    resolution?: number;
+  };
 };
 
-export class GameLoader extends Container {
-    public loadingBar!: LoadingBar;
+export class GameLoader {
+  loadingBar!: LoadingBar;
+  background!: Graphics;
+  onAimLogo!: CustomSprite;
 
-    constructor(public _width: number, public _height: number) {
-        super()
+  constructor(public gameView: GameView) {}
 
-        this.addPreBackground();
-        this.loadingBar = new LoadingBar(this._width, this._height);
-        this.addChild(this.loadingBar);
+  init() {
+    this.addBackground();
+    this.addOnAimLogo();
+    this.addLoadingBar();
+  }
 
-    }
+  private addLoadingBar() {
+    this.loadingBar = new LoadingBar(this.gameView);
+    this.loadingBar.x = this.gameView.width / 2;
+    this.loadingBar.y = this.gameView.height / 2;
+    this.gameView.add(this.loadingBar);
+  }
 
-    private addPreBackground(){
-        const background = new Graphics();
-        background.rect(0, 0, this._width, this._height);
-        background.fill("black");
-        this.addChild(background);
-    }
+  private addBackground() {
+    this.background = new Graphics();
+    this.background.rect(0, 0, this.gameView.width, this.gameView.height);
+    this.background.fill("black");
+    this.gameView.add(this.background);
+  }
 
-    async loadGameAssets(assets: Array<AssetInfo>): Promise<void> {
-        this.loadingBar.x = this._width / 2 - this.loadingBar.width / 2;
-        await this.load(assets, (progress) => {
-            this.loadingBar.updateFill(progress);
-        });
-    }
+  private addOnAimLogo() {
+    this.onAimLogo = new CustomSprite(
+      "onAimLogo",
+      this.gameView.width / 2,
+      this.gameView.height / 2 - 100
+    );
+    this.gameView.add(this.onAimLogo);
+  }
 
-    async load(assets: Array<AssetInfo>, onProgress: (progress: number) => void) {
-        let loadedCount = 0;
+  async loadGameAssets(assets: Array<AssetInfo>): Promise<void> {
+    await this.load(assets, (progress) => {
+      this.loadingBar.updateFill(progress);
+    });
 
-        // Function to handle asset loading with progress tracking
-        const loadAsset = async (asset: AssetInfo) => {
-            await Assets.load({
-                alias: asset.src,
-                src: asset.src,
-                data: asset.data || {},
-                ...(asset.src.includes(".atlas") && { loadParser: "loadTxt" }),
-            });
+    console.log(111111);
+  }
 
-            // Increment the count of loaded assets and update progress
-            loadedCount++;
-            const progress = loadedCount / assets.length;
-            onProgress(progress);
-        };
+  async load(assets: Array<AssetInfo>, onProgress: (progress: number) => void) {
+    let loadedCount = 0;
 
-        // Load all assets with progress tracking
-        await Promise.all(assets.map((asset) => loadAsset(asset)));
-    }
+    // Function to handle asset loading with progress tracking
+    const loadAsset = async (asset: AssetInfo) => {
+      await Assets.load({
+        alias: asset.src,
+        src: asset.src,
+        data: asset.data || {},
+        ...(asset.src.includes(".atlas") && { loadParser: "loadTxt" }),
+      });
+
+      // Increment the count of loaded assets and update progress
+      loadedCount++;
+      const progress = loadedCount / assets.length;
+      onProgress(progress);
+    };
+
+    // Load all assets with progress tracking
+    await Promise.all(assets.map((asset) => loadAsset(asset)));
+  }
 }
