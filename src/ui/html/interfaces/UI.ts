@@ -1,4 +1,5 @@
 import {EventEmitter} from "events";
+import {SpinButtonState} from "../enums";
 
 export type PixiContainer = { id: string };
 
@@ -9,6 +10,8 @@ export interface IUI {
     setPlaySectionColors(playButtonColor: string, playSectionBackgroundColor: string): void;
     setEventEmitter(eventBus: EventEmitter): void;
     updateSoundButtonImage(isPlaying: boolean): void;
+    updateSpinButton(state: SpinButtonState): void;
     showWinPopUp(amount: number, coinId: string): void;
     hideWinPopUp(): void;
+    showNotification(headline: string, description: string): void;
 }

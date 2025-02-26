@@ -21,6 +21,7 @@ export class HtmlUI implements IUI {
         winPopUp: null as HTMLElement | null,
         winPopUpText: null as HTMLElement | null,
         navContainer: null as HTMLElement | null,
+        notificationSection: null as HTMLElement | null,
     };
 
     private state = {
@@ -70,6 +71,7 @@ export class HtmlUI implements IUI {
         this.elements.winPopUp = uiContainer.querySelector('#win-popup-container');
         this.elements.navContainer = uiContainer.querySelector('#nav-container');
         this.elements.winPopUpText = uiContainer.querySelector('#win-popup-text') || null;
+        this.elements.notificationSection = uiContainer.querySelector('#notification-section');
 
         if (this.elements.soundButton) {
             this.elements.soundButton.addEventListener('click', () => this.toggleSound());
@@ -87,7 +89,7 @@ export class HtmlUI implements IUI {
     }
 
     //@ts-ignore
-    private updateSpinButton(state: SpinButtonState): void {
+    public updateSpinButton(state: SpinButtonState): void {
         const button = this.elements.spinButton;
         const buttonImage = button?.querySelector('img');
 
@@ -192,6 +194,11 @@ export class HtmlUI implements IUI {
     public showWinPopUp(amount: number, coinId: string): void {
         this.elements.winPopUpText!.innerText = `You've won ${amount} ${coinId} 🔥`;
         this.elements.winPopUp?.classList.toggle('hidden');
+    }
+
+    public showNotification(headline: string, description: string): void {
+        console.log(123)
+        // this.elements.notificationSection!.classList.toggle('hidden');
     }
 
     public hideWinPopUp(): void {

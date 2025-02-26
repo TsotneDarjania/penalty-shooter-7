@@ -1,10 +1,10 @@
-import {Application, Assets, ContainerChild, Sprite, Texture} from "pixi.js";
+import {Application as PixiApplication, Assets, ContainerChild, Sprite, Texture} from "pixi.js";
 import {initDevtools} from "@pixi/devtools";
 import {GameLoader} from "./loader";
 import {gameAssets} from "../config/loadData.ts";
 import {Board} from "./board/index.ts";
 
-export class GameView extends Application {
+export class GameView extends PixiApplication {
     private gameLoader!: GameLoader;
     private board!: Board;
 
@@ -175,8 +175,8 @@ export class GameView extends Application {
         });
 
         await this.init({
-            background: "#ffffff",
-            backgroundAlpha: 0,
+            background: "#292929",
+            // backgroundAlpha: 0,
             resizeTo: this.gameElement,
             antialias: true,
             resolution: window.devicePixelRatio || 1,

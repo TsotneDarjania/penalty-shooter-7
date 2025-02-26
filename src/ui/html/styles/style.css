@@ -242,3 +242,34 @@
     padding: 10px;
     border-radius: 5px;
 }
+
+.notification-container {
+    position: absolute;
+    width: calc(100% - 50px);
+    bottom: 5%;
+    background: rgba(28, 28, 28, 0.86);
+    border-radius: 24px;
+    z-index: 5;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    height: 120px;
+    padding: 25px;
+    font-family: 'Commissioner', sans-serif;
+}
+
+.notification-container > img {
+    width: 30px;
+    height: 30px;
+    margin-right: 20px;
+}
+
+.notification-container p {
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.notification-container span {
+    color: #FFF;
+    font-size: 13px;
+}

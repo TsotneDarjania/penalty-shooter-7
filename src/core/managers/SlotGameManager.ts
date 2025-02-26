@@ -1,5 +1,4 @@
 import {BaseGameManager} from "./BaseGameManager.ts";
-import {SpinButtonState} from "../../ui/html/enums"; // UI PACKAGE
 import {Api} from "../../api/api.ts"; // API PACKAGE
 import {InitialDataEndpoint} from "../../api/endpoints/initialDataEndpoint.ts"; // API PACKAGE
 import {IUI} from "../../ui/html/interfaces/UI.ts"; // UI PACKAGE
@@ -7,6 +6,7 @@ import {GameView} from "../game/GameView.ts";
 import {HtmlUI} from "../../ui/html"; // UI PACKAGE
 import {PlayerBalanceEndpoint} from "../../api/endpoints/playerBalanceEndpoint.ts";
 import {BetEndpoint} from "../../api/endpoints/betEndpoint.ts";
+import {SpinButtonState} from "../../ui/html/enums";
 
 
 interface ISlotGameManagerInstance {
@@ -22,6 +22,11 @@ export interface BetResult {
     winningLines: number[];
 }
 
+enum SpinButtonState {
+    IDLE = "idle",
+    SPINNING = "spinning",
+    DISABLED = "disabled"
+}
 
 export class SlotGameManager extends BaseGameManager {
     private static instance: SlotGameManager;
@@ -53,6 +58,13 @@ export class SlotGameManager extends BaseGameManager {
             betPrices: any
         } = await this.getInitialData();
 
+        console.log(initialData)
+
+        //@ts-ignore
+        // if (!initialData.Succeeded) {
+        //     this.ui.showNotification("iyo", "da ara iyo ra");
+        // }
+
         await this.getPlayerBalance();
 
         // Wait for assets to load (Game assets)
@@ -60,7 +72,6 @@ export class SlotGameManager extends BaseGameManager {
         this.gameView.hideLoadingScreen();
         this.gameView.showGame();
         // await new Promise(resolve => setTimeout(resolve, 1000));
-        // this.gameView.hideLoadingScreen();
 
         this.initialData = initialData;
         this.selectedBetOption = initialData.betPrices[0];
@@ -87,15 +98,18 @@ export class SlotGameManager extends BaseGameManager {
     }
 
     public async startPlay(): Promise<void> {
+        if(this.balance.amount === 0) {
+            this.ui.updateSpinButton(SpinButtonState.DISABLED);
+            return
+        }
+        this.ui.updateSpinButton(SpinButtonState.SPINNING);
         this.gameView.startSpin();
-        if(this.balance.amount === 0) return;
         const data: BetResult = await Api.call(BetEndpoint, this.selectedBetOption.betPriceId);
-        console.log(data)
-        this.gameView.stopSpin(false, data.combination || [], [[...data.winningLines]]);
         await new Promise(resolve => setTimeout(resolve, 1000));
         if(data.isWin){
             this.ui.showWinPopUp(data.totalWinningAmount, data.coinId)
         }
+        this.gameView.stopSpin(false, data.combination, [[...data.winningLines]])
         await this.getPlayerBalance();
         this.ui.setBalance(this.balance.amount);
     }
