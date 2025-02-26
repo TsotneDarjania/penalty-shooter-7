@@ -8,5 +8,8 @@ import {setupEndpoints} from "./api/endpoints";
     const UIContainer = document.getElementById("game-ui") as HTMLElement;
 
     // BOSS
-    await SlotGameManager.createInstance(GameContainer, UIContainer);
+    await SlotGameManager.createInstance({
+        gameContainer: GameContainer,
+        uiContainer: UIContainer,
+    });
 })();

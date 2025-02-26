@@ -1,110 +1,137 @@
-import { eventBus } from "../events";
-import { BaseGameManager } from "./BaseGameManager.ts";
-import { SlotEventKey, SpinButtonState } from "../../ui/html/enums"; // UI PACKAGE
-import { Api } from "../../api/api.ts"; // API PACKAGE
-import { InitialDataEndpoint } from "../../api/endpoints/initialDataEndpoint.ts"; // API PACKAGE
-import { IUI } from "../../ui/html/interfaces/UI.ts"; // UI PACKAGE
-import { GameView } from "../game/GameView.ts";
-import { HtmlUI } from "../../ui/html"; // UI PACKAGE
-import { AudioManager } from "./AudioManager.ts";
+import {BaseGameManager} from "./BaseGameManager.ts";
+import {SpinButtonState} from "../../ui/html/enums"; // UI PACKAGE
+import {Api} from "../../api/api.ts"; // API PACKAGE
+import {InitialDataEndpoint} from "../../api/endpoints/initialDataEndpoint.ts"; // API PACKAGE
+import {IUI} from "../../ui/html/interfaces/UI.ts"; // UI PACKAGE
+import {GameView} from "../game/GameView.ts";
+import {HtmlUI} from "../../ui/html"; // UI PACKAGE
+import {PlayerBalanceEndpoint} from "../../api/endpoints/playerBalanceEndpoint.ts";
+import {BetEndpoint} from "../../api/endpoints/betEndpoint.ts";
+
+
+interface ISlotGameManagerInstance {
+    gameContainer: HTMLElement;
+    uiContainer: HTMLElement;
+}
+
+export interface BetResult {
+    isWin: boolean;
+    totalWinningAmount: number;
+    coinId: string;
+    combination: number[][];
+    winningLines: number[];
+}
+
 
 export class SlotGameManager extends BaseGameManager {
-  private static instance: SlotGameManager;
-  private state: SpinButtonState = SpinButtonState.IDLE;
-  private gameView!: GameView;
-  audioManager!: AudioManager;
-  private ui!: IUI;
+    private static instance: SlotGameManager;
+    private state: SpinButtonState = SpinButtonState.IDLE;
+    private ui!: IUI;
 
-  private constructor() {
-    super();
+    private constructor() {
+        super();
 
-    this.audioManager = AudioManager.createInstance();
-
-    // eventBus.on("spin-button-click", () => console.log("spin button clicked"))
-  }
-
-  private async init(
-    GameContainer: HTMLElement,
-    UIContainer: HTMLElement
-  ): Promise<void> {
-    this.createGameView(GameContainer);
-    await this.gameView.setup(true);
-    this.gameView.showLoadingScreen();
-
-    // Wait for assets to load (Game assets)
-    this.gameView.startLoadingAssets().then(() => {
-      // Simulate
-      this.gameView.hideLoadingScreen();
-      this.gameView.showGame();
-
-      setTimeout(() => {
-        this.gameView.startSpin();
-      }, 1500);
-      setTimeout(() => {
-        this.gameView.stopSpin(true);
-      }, 2500);
-    });
-
-    const initialData = await Api.call(InitialDataEndpoint);
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
-    // this.gameView.hideLoadingScreen();
-
-    this.initialData = initialData;
-    this.selectedBetOption = initialData.betPrices[0];
-
-    // DRAW UI
-    this.ui = HtmlUI.getInstance();
-    this.ui.initialize(UIContainer);
-    this.ui.setBetOptions(this.initialData.betPrices);
-  }
-
-  public soundHandler() {
-    this.audioManager.isPlaying
-      ? this.audioManager.stopMusic()
-      : this.audioManager.playMusic();
-  }
-
-  private createGameView(GameContainer: HTMLElement): void {
-    this.gameView = new GameView(GameContainer);
-  }
-
-  public static async createInstance(
-    GameContainer?: HTMLElement,
-    UIContainer?: HTMLElement
-  ): Promise<SlotGameManager> {
-    if (!this.instance) {
-      this.instance = new SlotGameManager();
-      await this.instance.init(GameContainer!, UIContainer!);
+        this.eventEmitter.on("spin-button-click", () => this.startPlay())
+        this.eventEmitter.on("send-bet-option", (betOption) => this.setGetSelectedBetOption(betOption));
+        this.eventEmitter.on("toggle-sound", () => this.handleSoundButton());
     }
-    return this.instance;
-  }
 
-  getState(): string {
-    return this.state;
-  }
+    public static async createInstance(options: ISlotGameManagerInstance): Promise<SlotGameManager> {
+        if (!this.instance) {
+            this.instance = new SlotGameManager();
+            await this.instance.init(options.gameContainer, options.uiContainer);
+        }
+        return this.instance;
+    }
 
-  public startPlay(): void {
-    // this.gameView.startSpin();
-    //
-    // Api.call(BetEndpoint, 1, "").then((x) => {
-    //     this.gameView.stopSpin(false, x.combination, { lines: [x.winningLines] });
-    // });
-  }
+    private async init(GameContainer: HTMLElement, UIContainer: HTMLElement): Promise<void> {
+        await this.createGame(GameContainer);
+        await this.gameView.setup(true);
+        this.gameView.showLoadingScreen();
 
-  setState(newState: SpinButtonState): void {
-    this.state = newState;
-    eventBus.emit(SlotEventKey.STATE_CHANGE, this.state);
-  }
+        const initialData: {
+            betPrices: any
+        } = await this.getInitialData();
 
-  public async getPlayerBalance(): Promise<any> {
-    return await Api.call(PlayerBalanceEndpoint);
-  }
+        await this.getPlayerBalance();
 
-  public handleResult(result: any) {
-    console.log(result);
-    // Send to game
-    // Send to UI
-    // -- update balance
-    // spin state change
-  }
+        // Wait for assets to load (Game assets)
+        await this.gameView.startLoadingAssets();
+        this.gameView.hideLoadingScreen();
+        this.gameView.showGame();
+        // await new Promise(resolve => setTimeout(resolve, 1000));
+        // this.gameView.hideLoadingScreen();
+
+        this.initialData = initialData;
+        this.selectedBetOption = initialData.betPrices[0];
+
+        // DRAW UI
+        this.ui = HtmlUI.getInstance();
+        this.ui.setEventEmitter(this.eventEmitter);
+        this.ui.initialize(UIContainer);
+        this.ui.setBalance(this.balance.amount);
+        this.ui.setBetOptions(this.initialData.betPrices);
+    }
+
+    //@ts-ignore
+    private getState(): string {
+        return this.state;
+    }
+
+    public soundHandler() {
+        this.audioManager.isPlaying ? this.audioManager.stopMusic() : this.audioManager.playMusic();
+    }
+
+    private async createGame(GameContainer: HTMLElement): Promise<void> {
+        this.gameView = new GameView(GameContainer);
+    }
+
+    public async startPlay(): Promise<void> {
+        this.gameView.startSpin();
+        if(this.balance.amount === 0) return;
+        const data: BetResult = await Api.call(BetEndpoint, this.selectedBetOption.betPriceId);
+        console.log(data)
+        this.gameView.stopSpin(false, data.combination || [], [[...data.winningLines]]);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        if(data.isWin){
+            this.ui.showWinPopUp(data.totalWinningAmount, data.coinId)
+        }
+        await this.getPlayerBalance();
+        this.ui.setBalance(this.balance.amount);
+    }
+
+    setState(newState: SpinButtonState): void {
+        this.state = newState;
+        // eventBus.emit(SlotEventKey.STATE_CHANGE, this.state);
+    }
+
+    public async getPlayerBalance(): Promise<void> {
+        const balanceData: any = await Api.call(PlayerBalanceEndpoint);
+        this.setBalance(balanceData.balance);
+    }
+
+    async getInitialData(): Promise<any> {
+        return await Api.call(InitialDataEndpoint);
+    }
+
+    public handleResult(result: any) {
+        console.log(result);
+        // Send to game
+        // Send to UI
+        // -- update balance
+        // spin state change
+    }
+
+    private handleSoundButton(): void {
+        console.log(this.audioManager)
+        if (this.audioManager.isPlaying) {
+            console.log("SlotGameManager: Stopping music");
+            this.audioManager.stopMusic();
+            this.ui.updateSoundButtonImage(false); // Update UI
+        } else {
+            console.log("SlotGameManager: Playing music");
+            this.audioManager.playMusic();
+            this.ui.updateSoundButtonImage(true); // Update UI
+        }
+    }
 }

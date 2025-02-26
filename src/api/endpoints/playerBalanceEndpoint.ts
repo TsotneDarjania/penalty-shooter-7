@@ -10,11 +10,11 @@ export type GameInitData = {
 };
 
 
-export class InitialDataEndpoint extends Endpoint<GameInitData, undefined> {
+export class PlayerBalanceEndpoint extends Endpoint<GameInitData, undefined> {
     constructor() {
         super(undefined);
     }
-    baseUrl?: string;
+    baseUrl?: string = "http://192.168.88.138:5002";
     method: "GET" | "POST" = "GET";
-    path: string = `/GreekSlotApi/Game/InitialData`;
+    path: string = `/HubApi/Game/PlayerInCoinBalances`;
 }

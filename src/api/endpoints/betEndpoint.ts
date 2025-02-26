@@ -3,23 +3,22 @@
 
 import { Endpoint } from "../api.ts";
 
-export type BetResult = {
-  winAmount: number;
-  coin: string;
-};
+export interface BetResult {
+  isWin: boolean;
+  totalWinningAmount: number;
+  coinId: string;
+  combination: number[][];
+  winningLines: number[];
+}
 
 export class BetEndpoint extends Endpoint<
   BetResult,
-  { query: { betOptionId: number; coin: string } }
+  { query: { betPriceId : number; } }
 > {
-  constructor(betaOptionId: number, coin: string) {
-    super({ query: { betOptionId: betaOptionId, coin: coin } });
+  constructor(betPriceId : number) {
+    super({ query: { betPriceId : betPriceId } });
   }
-  baseUrl?: string = undefined;
-  method: "GET" | "POST" = "GET";
-  path: string = "/bet";
+  baseUrl?: string;
+  method: "GET" | "POST" = "POST";
+  path: string = "/GreekSlotApi/Game/PlayGreekSlot";
 }
-
-//initialData
-//bet
-//balace

@@ -13,14 +13,14 @@ export abstract class Endpoint<
   abstract baseUrl?: string;
   abstract method?: "GET" | "POST";
   static headers: Record<string, string> = {};
-  static commonQueryparams: Record<string, string> = {};
+  static commonQueryParams: Record<string, string> = {};
 
   static setHeader(key: string, value: string) {
     this.headers[key] = value;
   }
 
-  static setCommonQueryparams(key: string, value: string) {
-    this.commonQueryparams[key] = value;
+  static setCommonQueryParams(key: string, value: string) {
+    this.commonQueryParams[key] = value;
   }
 
   constructor(private params: TParams) {}
@@ -28,7 +28,7 @@ export abstract class Endpoint<
   async call(callBack?: (response: TResponse) => void): Promise<TResponse> {
     let url = (this.baseUrl || Api.globalBaseUrl) + this.path;
 
-    let queryParams = { ...this.params?.query, ...Endpoint.commonQueryparams };
+    let queryParams = { ...this.params?.query, ...Endpoint.commonQueryParams };
     if (queryParams) {
       const queryString = Object.entries(queryParams)
         .map(
@@ -65,7 +65,6 @@ export class Api {
       return this.mocks[ctor.name]() as ReturnType<T["call"]>;
 
     const instance = new ctor(...args);
-    console.log(instance)
     return instance.call() as ReturnType<T["call"]>;
   }
 
@@ -74,7 +73,7 @@ export class Api {
   }
 
   static setCommonQueryparams(key: string, value: string) {
-    Endpoint.setCommonQueryparams(key, value)
+    Endpoint.setCommonQueryParams(key, value)
   }
 
   static mocks: Record<string, () => {}> = {};

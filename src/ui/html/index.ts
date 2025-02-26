@@ -1,13 +1,11 @@
 import html from './index.html?raw';
-import {IUI} from './interfaces/UI.ts';
-import {SpinButtonState, UIEventKey} from "./enums";
-import {EventEmitter} from "events";
-import {eventBus} from "../../core/events.ts";
-import {SlotGameManager} from "../../core/managers/SlotGameManager.ts";
+import { IUI } from './interfaces/UI.ts';
+import { SpinButtonState } from "./enums";
+import { EventEmitter } from "events";
 
 export class HtmlUI implements IUI {
     private static instance: HtmlUI;
-    private eventEmitter: EventEmitter = eventBus;
+    private eventEmitter!: EventEmitter;
 
     private elements = {
         container: null as HTMLElement | null,
@@ -32,12 +30,8 @@ export class HtmlUI implements IUI {
         playSectionBackgroundColor: 'grey',
     };
 
-    // private onSpin!: () => void;
-
     constructor() {
-        document.addEventListener('click', () => {
-            this.toggleSound();
-        }, {once: true});
+
     }
 
     public static getInstance(): HtmlUI {
@@ -47,17 +41,16 @@ export class HtmlUI implements IUI {
         return this.instance;
     }
 
-    // private registerEventHandlers() {
-    //     this.eventEmitter.on(SlotEventKey.STATE_CHANGE, this.updateSpinButton.bind(this));
-    //     this.eventEmitter.on(UIEventKey.UPDATE_BALANCE, this.setBalance.bind(this));
-    // }
-
     public setPlaySectionColors(playButtonColor: string, playSectionBackgroundColor: string): void {
         this.state.platButtonColor = playButtonColor;
         document.getElementById("spin-button")!.style.background = this.state.platButtonColor;
         this.state.playSectionBackgroundColor = playSectionBackgroundColor;
         document.getElementById("game-panel-container-masked")!.style.background = this.state.playSectionBackgroundColor;
         document.getElementById("bet-options")!.style.background = this.state.playSectionBackgroundColor;
+    }
+
+    public setEventEmitter(eventBus: EventEmitter): void {
+        this.eventEmitter = eventBus;
     }
 
     public initialize(uiContainer: HTMLElement): void {
@@ -85,7 +78,7 @@ export class HtmlUI implements IUI {
             this.elements.navSection.addEventListener('click', () => this.toggleNavSection());
         }
         if (this.elements.spinButton) {
-            this.elements.spinButton.addEventListener('click', () => this.clickHandler());
+            this.elements.spinButton.addEventListener('click', () => this.spinButtonClickHandler());
         }
         if (this.elements.betSection) {
             this.elements.betSection.querySelector('div.flex')?.addEventListener('click', () => this.toggleBetOptions());
@@ -93,6 +86,7 @@ export class HtmlUI implements IUI {
 
     }
 
+    //@ts-ignore
     private updateSpinButton(state: SpinButtonState): void {
         const button = this.elements.spinButton;
         const buttonImage = button?.querySelector('img');
@@ -114,46 +108,29 @@ export class HtmlUI implements IUI {
         }
     }
 
-    // public assignEventEmitter(eventBus: any){
-    //     this.eventBus = eventBus;
-    //     this.registerEventHandlers();
-    // }
-
     private toggleBetOptions(): void {
         if (this.elements.betOptions) {
             this.elements.betOptions.classList.toggle('hidden');
         }
     }
 
-// {
-//     "music": {},
-//     "isMuted": false
-// }
+    public updateSoundButtonImage(isPlaying: boolean): void {
+        if (this.elements.soundButtonImg) {
+            this.elements.soundButtonImg.src = isPlaying
+                ? "/assets/sound-button-on.png"
+                : "/assets/sound-button-off.png";
+        }
+    }
 
-    private async toggleSound(): Promise<void> {
-        const slotGameManager = await SlotGameManager.createInstance();
-        const audio = slotGameManager.audioManager;
-
-        if (audio.isPlaying) {
-            audio.stopMusic();
-            if (this.elements.soundButtonImg) {
-                this.elements.soundButtonImg.src = '/assets/sound-button-off.png';
-            }
-        } else {
-            audio.playMusic();
-            if (this.elements.soundButtonImg) {
-                this.elements.soundButtonImg.src = '/assets/sound-button-on.png';
-            }
+    public async toggleSound(): Promise<void> {
+        if (this.eventEmitter) {
+            this.eventEmitter.emit("toggle-sound");
         }
     }
 
     private toggleNavSection(): void {
         // @ts-ignore
         this.elements.navContainer.classList.toggle('hidden');
-    }
-
-    public getBalance(): number {
-        return Number(this.elements.balanceAmount?.textContent) || 0;
     }
 
     public setBalance(newBalance: number): void {
@@ -168,7 +145,7 @@ export class HtmlUI implements IUI {
     }
 
     private emitBetOption(): void {
-        this.eventEmitter.emit(UIEventKey.SEND_BET_OPTION, this.state.selectedBetOption);
+        this.eventEmitter.emit("send-bet-option", this.state.selectedBetOption);
     }
 
     public setBetOptions(betOptionsList: any[]): void {
@@ -212,21 +189,16 @@ export class HtmlUI implements IUI {
         this.elements.selectedBetOption.textContent = `BET ${this.state.selectedBetOption.multiplier}X`;
     }
 
-    public showWinPopUp(): void {
-        this.elements.winPopUpText!.innerText = `You've won {prize}, it's been multiplied x{multiplier}! 🔥`;
+    public showWinPopUp(amount: number, coinId: string): void {
+        this.elements.winPopUpText!.innerText = `You've won ${amount} ${coinId} 🔥`;
         this.elements.winPopUp?.classList.toggle('hidden');
     }
 
-    public hideWinPop(): void {
+    public hideWinPopUp(): void {
         this.elements.winPopUp?.classList.toggle('hidden');
     }
 
-    private clickHandler() {
+    private spinButtonClickHandler() {
         this.eventEmitter.emit("spin-button-click");
     }
-
-    // onClick(startPlay: () => void) {
-    //     console.log('onClick', startPlay);
-    //     this.onSpin = startPlay;
-    // }
 }

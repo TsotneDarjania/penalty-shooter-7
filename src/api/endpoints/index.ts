@@ -6,7 +6,7 @@ export function setupEndpoints() {
     const promotionId = urlParams.get("promotionid") || urlParams.get("promotionId")!;
     const token = urlParams.get("token")!;
 
-    Api.globalBaseUrl = "http://192.168.88.138:5013";
+    Api.globalBaseUrl = "http://192.168.88.138:5012";
 
     Api.setHeader("Authorization", `Bearer ${token}`);
     Api.setCommonQueryparams("promotionId", promotionId);
