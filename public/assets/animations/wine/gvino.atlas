@@ -1,0 +1,38 @@
+gvino.png
+size:2013,675
+filter:Linear,Linear
+pma:true
+Layer 10
+bounds:580,3,193,152
+offsets:1,1,195,154
+Layer 11
+bounds:803,196,477,214
+offsets:1,1,479,216
+rotate:90
+Layer 13
+bounds:775,34,295,121
+offsets:1,1,297,123
+Layer 4
+bounds:1072,48,699,305
+Layer 5
+bounds:1019,355,746,318
+offsets:2,1,749,320
+Layer 6
+bounds:2,15,658,329
+offsets:1,1,660,332
+rotate:90
+Layer 7
+bounds:333,111,562,245
+offsets:1,1,564,247
+rotate:90
+Layer 8
+bounds:580,157,516,221
+offsets:1,2,519,224
+rotate:90
+Layer 9
+bounds:333,2,181,107
+offsets:1,1,183,109
+Rectangle 5 copy
+bounds:1767,429,244,244
+Rectangle 5 copy 7
+bounds:1773,219,208,208
