@@ -4,7 +4,7 @@ import {GameLoader} from "./loader";
 import {gameAssets} from "../config/loadData.ts";
 
 export class GameView extends Application {
-    private gameLoader!: GameLoader;
+    private readonly gameLoader!: GameLoader;
     private readonly width!: number;
     private readonly height!: number;
 
@@ -14,25 +14,28 @@ export class GameView extends Application {
         this.width = this.gameElement.offsetWidth;
         this.height = this.gameElement.offsetHeight;
 
+        this.gameLoader = new GameLoader(this.width, this.height);
 
-        this.setup(true).then(async () => {
-            this.gameLoader = new GameLoader(this.width, this.height);
+        this.gameLoader.visible = false;
 
-            this.stage.addChild(this.gameLoader);
-
-            await this.gameLoader.loadGameAssets(gameAssets);
-
-        });
+        this.stage.addChild(this.gameLoader);
     }
 
-
-    public hideLoadingScene() {
-        this.gameLoader.loadingBar.destroy();
+    public showLoadingScreen(): void {
+        this.gameLoader.visible = true;
     }
 
-    private async setup(devTools: boolean) {
+    public async startLoadingAssets() {
+        await this.gameLoader.loadGameAssets(gameAssets)
+    }
+
+    public hideLoadingScreen() {
+        this.gameLoader.destroy();
+    }
+
+    public async setup(devTools: boolean) {
         await this.init({
-            background: "#FFF",
+            background: "#ffffff",
             backgroundAlpha: 0,
             resizeTo: this.gameElement,
             antialias: true,

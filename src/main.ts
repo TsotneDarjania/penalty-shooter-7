@@ -3,7 +3,7 @@ import {setupEndpoints} from "./api/endpoints";
 
 // tests
 (async () => {
-    setupEndpoints()
+    setupEndpoints();
     const GameContainer = document.getElementById("game-container") as HTMLElement;
     const UIContainer = document.getElementById("game-ui") as HTMLElement;
 

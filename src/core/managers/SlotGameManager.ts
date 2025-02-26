@@ -1,11 +1,11 @@
 import { eventBus } from "../events";
 import { BaseGameManager } from "./BaseGameManager.ts";
-import { SlotEventKey, SpinButtonState } from "../../ui/html/enums";
-import { Api } from "../../api/api.ts";
-import { InitialDataEndpoint } from "../../api/endpoints/initialDataEndpoint.ts";
-import { IUI } from "../../ui/html/interfaces/UI.ts";
+import { SlotEventKey, SpinButtonState } from "../../ui/html/enums"; // UI PACKAGE
+import { Api } from "../../api/api.ts"; // API PACKAGE
+import { InitialDataEndpoint } from "../../api/endpoints/initialDataEndpoint.ts"; // API PACKAGE
+import { IUI } from "../../ui/html/interfaces/UI.ts"; // UI PACKAGE
 import { GameView } from "../game/GameView.ts";
-import {HtmlUI} from "../../ui/html";
+import {HtmlUI} from "../../ui/html"; // UI PACKAGE
 import {AudioManager} from "./AudioManager.ts";
 
 export class SlotGameManager extends BaseGameManager {
@@ -24,10 +24,18 @@ export class SlotGameManager extends BaseGameManager {
     }
 
     private async init(GameContainer: HTMLElement, UIContainer: HTMLElement): Promise<void> {
-        this.createGameView(GameContainer)
+        this.createGameView(GameContainer);
+        await this.gameView.setup(true);
+        this.gameView.showLoadingScreen();
+
         const initialData = await Api.call(InitialDataEndpoint);
         await new Promise(resolve => setTimeout(resolve, 3000));
-        this.gameView.hideLoadingScene();
+        // this.gameView.hideLoadingScreen();
+
+        // Wait for assets to load (Game assets)
+        this.gameView.startLoadingAssets().then(() => {
+            console.log("done");
+        })
 
         this.initialData = initialData;
         this.selectedBetOption = initialData.betPrices[0];

@@ -29,12 +29,10 @@ export class GameLoader extends Container {
         this.addChild(background);
     }
 
-    async loadGameAssets(assets: Array<AssetInfo>) {
+    async loadGameAssets(assets: Array<AssetInfo>): Promise<void> {
         this.loadingBar.x = this._width / 2 - this.loadingBar.width / 2;
         await this.load(assets, (progress) => {
-            setTimeout(() => {
-                this.loadingBar.updateFill(progress)
-            }, 1000)
+            this.loadingBar.updateFill(progress);
         });
     }
 
