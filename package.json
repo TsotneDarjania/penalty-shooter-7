@@ -1,0 +1,24 @@
+{
+  "name": "onaim-test",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@types/events": "^3.0.3",
+    "typescript": "~5.7.2",
+    "vite": "^6.1.0"
+  },
+  "dependencies": {
+    "@pixi/devtools": "^2.0.1",
+    "cors": "^2.8.5",
+    "events": "^3.3.0",
+    "express": "^4.21.2",
+    "gsap": "^3.12.7",
+    "pixi.js": "^8.8.0"
+  }
+}

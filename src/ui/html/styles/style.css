@@ -1,0 +1,244 @@
+.game-panel-container {
+    font-family: 'Commissioner', sans-serif;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+}
+
+.game-panel-container > * {
+    user-select: none;
+}
+
+.win-popup-container {
+    width: calc(100% - 50px);
+    height: 114px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 55px;
+    font-family: 'Satoshi', sans-serif;
+    user-select: none;
+}
+
+.win-popup-container > img {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -20px;
+}
+
+.win-popup-container-masked {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(2px);
+    border-radius: 24px;
+    mask: radial-gradient(30px at top, #0000 calc(100%), #FFF);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.win-popup-container-masked > img {
+    margin-top: 20px;
+}
+
+.win-popup-container-masked > p {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #FFFFFF;
+}
+
+.game-panel-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-panel-container > button {
+    width: 104px;
+    height: 104px;
+    border-radius: 50%;
+    margin-top: -104px;
+    border: none;
+    background: #103142;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.game-panel-container > button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.game-panel-container, .game-panel-container-masked {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100px;
+}
+
+.game-panel-container-masked {
+    background: #100C4D4D;
+    backdrop-filter: blur(10px);
+    mask: radial-gradient(60px at top, #0000 calc(100% - 1px), #d32626);
+}
+
+.game-panel-container-masked.game-panel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    align-items: center;
+    width: 100%;
+    padding: 11px 24px;
+}
+
+.balance-section {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+}
+
+.sound-section {
+    grid-column: 1;
+    grid-row: 2;
+    display: flex;
+    align-items: center;
+}
+
+.bet-section {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    position: relative;
+}
+
+.bet-section > div {
+    cursor: pointer;
+}
+
+.bet-section span {
+    margin-right: 8px;
+}
+
+.bet-section img {
+    cursor: pointer;
+}
+
+.bet-section, .balance-section {
+    font-size: 16px;
+    color: #FFF;
+}
+
+.nav-section {
+    grid-column: 2;
+    grid-row: 2;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.bet-section button, .nav-section button, .sound-section button {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.balance-section img {
+    height: 30px;
+}
+
+.bet-options {
+    width: 118px;
+    height: 188px;
+    background: #100C4D4D;
+    backdrop-filter: blur(10px);
+    position: absolute;
+    top: calc(-188px - 8px);
+    right: 24px;
+    border: 1px solid #FFFFFF33;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.hidden {
+    display: none;
+}
+
+.bet-options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    height: 100%;
+    box-sizing: content-box;
+    width: 100%;
+    padding-right: 5px;
+}
+
+.bet-options-list::-webkit-scrollbar {
+    width: 3px;
+}
+
+.bet-options-list::-webkit-scrollbar-thumb {
+    background: #FFFFFF80;
+    border-radius: 8px;
+    width: 3px;
+}
+
+.bet-option {
+    width: 100%;
+    height: 32px;
+    text-align: center;
+    line-height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.bet-option.active {
+    background: #FFFFFF;
+}
+
+.bet-option.active span {
+    color: #101010;
+}
+
+.bet-option span {
+    font-size: 14px;
+    color: #FFFFFF;
+}
+
+.nav-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    background: rgba(32, 32, 32, 0.83);
+    z-index: 5;
+    padding: 1rem;
+    font-family: 'Satoshi', sans-serif;
+}
+
+.rules-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.nav-container h1, p {
+    color: #FFF;
+}
+
+.rules-list li {
+    background-color: #e7e7e7;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+}

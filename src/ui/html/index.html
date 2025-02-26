@@ -1,0 +1,49 @@
+<div class="win-popup-container hidden" id="win-popup-container">
+    <img src="/assets/win-popup-icon.png" alt="">
+    <div class="win-popup-container-masked">
+        <img src="/assets/win-popup-wintext.png" alt="">
+        <p id="win-popup-text"></p>
+    </div>
+</div>
+<div class="nav-container hidden" id="nav-container">
+    <h1>Game Rules</h1>
+    <p>Welcome to our game! Below are the simple rules you need to follow:</p>
+
+    <ul class="rules-list">
+        <li><strong>Rule 1:</strong> Start by selecting your character from the menu.</li>
+        <li><strong>Rule 2:</strong> Collect points by completing tasks in each level.</li>
+        <li><strong>Rule 3:</strong> Avoid obstacles to prevent losing health points.</li>
+        <li><strong>Rule 4:</strong> Use power-ups to increase your chances of winning.</li>
+        <li><strong>Rule 5:</strong> Complete all levels to win the game and earn a special prize!</li>
+    </ul>
+
+    <p>Enjoy the game and have fun!</p>
+</div>
+<div class="game-panel-container">
+    <button data-action="spin-action" id="spin-button">
+        <img src="/assets/spin.png" alt="">
+    </button>
+    <div class="bet-options hidden" id="bet-options">
+        <div class="bet-options-list"></div>
+    </div>
+    <div class="game-panel-container-masked game-panel-grid" id="game-panel-container-masked">
+        <div class="balance-section" id="balance-section">
+            <img src="/assets/balance.png" alt="">
+            <span>0</span>
+        </div>
+        <div class="sound-section" id="sound-section">
+            <button data-action="sound">
+                <img src="/assets/sound-button-off.png" alt="">
+            </button>
+        </div>
+        <div class="bet-section" id="bet-section">
+            <div class="flex">
+                <span id="selected-bet-option"></span>
+                <img src="/assets/arrow-square-down.png" alt="">
+            </div>
+        </div>
+        <div class="nav-section">
+            <button data-action="nav-action" id="nav-section"><img src="/assets/burger-icon.png" alt=""></button>
+        </div>
+    </div>
+</div>
