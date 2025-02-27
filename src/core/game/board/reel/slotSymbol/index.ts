@@ -40,8 +40,10 @@ export class SlotSymbol extends Container {
 
     this.spine.y += this.fakeImage.y;
 
-    this.spine.width = calculatePercentage(70, displayWidth) - padding;
-    this.spine.height = calculatePercentage(70, displayWidth) - padding;
+    // this.spine.width = calculatePercentage(70, displayWidth) - padding;
+    // this.spine.height = calculatePercentage(70, displayWidth) - padding;
+
+    this.spine.scale = 0.8;
 
     this.spine.state.setAnimation(0, "Static", true);
 

@@ -77,7 +77,7 @@ export class GameView extends PixiApplication {
   private addBoard() {
     this.board = new Board(
       this.getScaledX(0.5),
-      this.getScaledY(0.41),
+      this.getScaledY(0.39),
       780,
       775,
       boardDataConfig
