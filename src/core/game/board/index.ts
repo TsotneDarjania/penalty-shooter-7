@@ -114,7 +114,7 @@ export class Board extends Container {
     // this.line_0_0_0.height = 420;
     this.line_0_0_0.y += 134;
     this.line_0_0_0.x += 45;
-    this.line_0_0_0.scale = 0.5;
+    this.line_0_0_0.scale = 0.2;
     this.line_0_0_0.width += 600;
     // this.line_0_0_0.rotation = -0.73039;
     this.addChild(this.line_0_0_0);
@@ -127,7 +127,7 @@ export class Board extends Container {
     // this.line_1_1_1.height = 420;
     this.line_1_1_1.y += 6;
     this.line_1_1_1.x += 45;
-    this.line_1_1_1.scale = 0.5;
+    this.line_1_1_1.scale = 0.2;
     this.line_1_1_1.width += 600;
     // this.line_1_1_1.rotation = -0.730398;
     this.addChild(this.line_1_1_1);
@@ -136,8 +136,8 @@ export class Board extends Container {
       skeleton: skeletonPath,
       atlas: atlasPath,
     });
-    this.line_2_2_2.scale = 0.5;
-    this.line_2_2_2.y -= 128;
+    this.line_2_2_2.scale = 0.1;
+    this.line_2_2_2.y -= 68;
     this.line_2_2_2.x += 45;
     this.line_2_2_2.width += 600;
     // this.line_2_2_2.rotation = -0.73039;

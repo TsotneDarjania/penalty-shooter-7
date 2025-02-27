@@ -31,10 +31,8 @@ export class SlotSymbol extends Container {
 
     console.log(key);
 
-    const atlasPath = GameAssets.animations.symbols.vine.skeleton.replace(
-      /\.json$/,
-      ".atlas"
-    );
+    // @ts-ignore
+    const atlasPath = key.replace(/\/([^\/]+)\.json$/, "/$1.atlas");
     this.spine = Spine.from({
       skeleton: key,
       atlas: atlasPath,
