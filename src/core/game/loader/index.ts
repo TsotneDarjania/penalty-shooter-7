@@ -52,8 +52,6 @@ export class GameLoader {
     await this.load(assets, (progress) => {
       this.loadingBar.updateFill(progress);
     });
-
-    console.log(111111);
   }
 
   async load(assets: Array<AssetInfo>, onProgress: (progress: number) => void) {

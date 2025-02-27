@@ -57,16 +57,21 @@ export abstract class Endpoint<
 
 export class Api {
   static globalBaseUrl: string;
-  static call<
-    T extends Endpoint<any, any>,
-    Args extends ConstructorParameters<new (...args: any[]) => T>
-  >(ctor: new (...args: Args) => T, ...args: Args): ReturnType<T["call"]> {
-    if (this.mocks[ctor.name])
+  static async call<
+      T extends Endpoint<any, any>,
+      Args extends ConstructorParameters<new (...args: any[]) => T>
+  >(ctor: new (...args: Args) => T, ...args: Args): Promise<ReturnType<T["call"]>> {
+    // Introduce a delay of 1 second (1000 ms)
+    await new Promise(resolve => setTimeout(resolve, 3000));
+
+    if (this.mocks[ctor.name]) {
       return this.mocks[ctor.name]() as ReturnType<T["call"]>;
+    }
 
     const instance = new ctor(...args);
-    return instance.call() as ReturnType<T["call"]>;
+    return await instance.call() as ReturnType<T["call"]>;
   }
+
 
   static setHeader(key: string, value: string) {
     Endpoint.setHeader(key, value);

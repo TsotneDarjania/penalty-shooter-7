@@ -35,11 +35,13 @@ export interface IBetOption {
 
 export abstract class BaseGameManager implements IBaseGameManager {
     public balance!: Balance;
+    protected isResponseReceived: boolean = false;
     protected initialData: any = {};
     protected selectedBetOption!: IBetOption;
     protected gameView!: GameView;
     protected audioManager: AudioManager = AudioManager.createInstance();
     protected eventEmitter: EventEmitter = eventBus;
+    protected isReadyToStart: boolean = true;
 
     public setGetSelectedBetOption(selectedBetOption: any): void {
         this.selectedBetOption = selectedBetOption;
@@ -49,8 +51,23 @@ export abstract class BaseGameManager implements IBaseGameManager {
         return this.balance;
     }
 
-    public setBalance(amount: Balance): void {
-        this.balance = amount;
+    public setBalance(balance: Balance): void {
+        this.balance = balance;
+    }
+
+    protected handleApiResponse<T extends object>(
+        response: T | { error: string },
+        onError?: (message: string) => void
+    ): T | null {
+        if (typeof response === "object" && "error" in response) {
+            if (onError) {
+                onError(response.error);
+            } else {
+                console.error("API Error:", response.error);
+            }
+            return null; // Stop execution by returning null
+        }
+        return response as T; // Return valid data
     }
 
     abstract startPlay(): void;

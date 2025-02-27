@@ -6,8 +6,6 @@ import {GameView} from "../game/GameView.ts";
 import {HtmlUI} from "../../ui/html"; // UI PACKAGE
 import {PlayerBalanceEndpoint} from "../../api/endpoints/playerBalanceEndpoint.ts";
 import {BetEndpoint} from "../../api/endpoints/betEndpoint.ts";
-import {SpinButtonState} from "../../ui/html/enums";
-
 
 interface ISlotGameManagerInstance {
     gameContainer: HTMLElement;
@@ -32,10 +30,19 @@ export class SlotGameManager extends BaseGameManager {
     private static instance: SlotGameManager;
     private state: SpinButtonState = SpinButtonState.IDLE;
     private ui!: IUI;
+    private responseData: BetResult | null = null;
 
     private constructor() {
         super();
+    }
 
+    private registerListeners(): void {
+        this.gameView.board.eventEmitter.on('reset', () => {
+            this.isReadyToStart = true;
+            this.setState(SpinButtonState.IDLE)
+            this.ui.updateSpinButton(SpinButtonState.IDLE);
+            console.log('Ready to start');
+        });
         this.eventEmitter.on("spin-button-click", () => this.startPlay())
         this.eventEmitter.on("send-bet-option", (betOption) => this.setGetSelectedBetOption(betOption));
         this.eventEmitter.on("toggle-sound", () => this.handleSoundButton());
@@ -58,13 +65,6 @@ export class SlotGameManager extends BaseGameManager {
             betPrices: any
         } = await this.getInitialData();
 
-        console.log(initialData)
-
-        //@ts-ignore
-        // if (!initialData.Succeeded) {
-        //     this.ui.showNotification("iyo", "da ara iyo ra");
-        // }
-
         await this.getPlayerBalance();
 
         // Wait for assets to load (Game assets)
@@ -82,6 +82,13 @@ export class SlotGameManager extends BaseGameManager {
         this.ui.initialize(UIContainer);
         this.ui.setBalance(this.balance.amount);
         this.ui.setBetOptions(this.initialData.betPrices);
+
+        if(!this.checkIfPlayerCanBet()) {
+            this.ui.updateSpinButton(SpinButtonState.DISABLED);
+            return;
+        }
+
+        this.registerListeners();
     }
 
     //@ts-ignore
@@ -97,19 +104,50 @@ export class SlotGameManager extends BaseGameManager {
         this.gameView = new GameView(GameContainer);
     }
 
+    private checkIfPlayerCanBet(): boolean {
+        return this.balance.amount > 0 && this.balance.amount >= this.selectedBetOption.betAmount;
+    }
+
+    private stopPlay(): void {
+        this.gameView.stopSpin(true, this.responseData!.combination, [[...this.responseData!.winningLines]]);
+        this.ui.updateSpinButton(SpinButtonState.IDLE);
+        this.setState(SpinButtonState.IDLE)
+        this.responseData = null;
+        this.isResponseReceived = false;
+    }
+
     public async startPlay(): Promise<void> {
-        if(this.balance.amount === 0) {
-            this.ui.updateSpinButton(SpinButtonState.DISABLED);
-            return
+        // CASE 1 - როდესაც SPINNING და DATA არ არის მოსული, ღილაკზე დაჭერა მოხდა, ამ დროს რა ხდება
+        if(this.state === SpinButtonState.SPINNING) return; // Response არაა მოსული და მოხდა STOP ღილაკზე დაჭერა
+
+        if(this.isResponseReceived) { // Response მოსულია და მოხდა STOP ღილაკზე დაჭერა
+            this.stopPlay();
+            return;
         }
+
+        this.ui.hideWinPopUp();
+
+
+        this.setState(SpinButtonState.SPINNING);
         this.ui.updateSpinButton(SpinButtonState.SPINNING);
         this.gameView.startSpin();
-        const data: BetResult = await Api.call(BetEndpoint, this.selectedBetOption.betPriceId);
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        if(data.isWin){
-            this.ui.showWinPopUp(data.totalWinningAmount, data.coinId)
+        this.setBalance({
+            ...this.balance,
+            amount: this.balance.amount - this.selectedBetOption.betAmount
+        });
+        this.ui.setBalance(this.balance.amount - this.selectedBetOption.betAmount)
+        this.responseData = await Api.call(BetEndpoint, this.selectedBetOption.betPriceId);
+        await this.handleResult(this.responseData);
+    }
+
+    public async handleResult(result: any) {
+        this.ui.updateSpinButton(SpinButtonState.DISABLED)
+        this.gameView.stopSpin(false, result.combination, [[...result.winningLines]]);
+        this.isResponseReceived = true;
+        if(result.isWin){
+            this.ui.showWinPopUp(result.totalWinningAmount, result.coinId);
         }
-        this.gameView.stopSpin(false, data.combination, [[...data.winningLines]])
+        this.isResponseReceived = false;
         await this.getPlayerBalance();
         this.ui.setBalance(this.balance.amount);
     }
@@ -128,16 +166,7 @@ export class SlotGameManager extends BaseGameManager {
         return await Api.call(InitialDataEndpoint);
     }
 
-    public handleResult(result: any) {
-        console.log(result);
-        // Send to game
-        // Send to UI
-        // -- update balance
-        // spin state change
-    }
-
     private handleSoundButton(): void {
-        console.log(this.audioManager)
         if (this.audioManager.isPlaying) {
             console.log("SlotGameManager: Stopping music");
             this.audioManager.stopMusic();

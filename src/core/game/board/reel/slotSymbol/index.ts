@@ -29,8 +29,6 @@ export class SlotSymbol extends Container {
 
     this.addFakeImage();
 
-    console.log(key);
-
     const atlasPath = GameAssets.animations.symbols.vine.skeleton.replace(
       /\.json$/,
       ".atlas"

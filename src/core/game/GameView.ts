@@ -1,12 +1,12 @@
-import {Application as PixiApplication, Assets, ContainerChild, Sprite, Texture} from "pixi.js";
+import {Application as PixiApplication, Assets, ContainerChild, Sprite} from "pixi.js";
 import {initDevtools} from "@pixi/devtools";
 import {GameLoader} from "./loader";
 import {gameAssets} from "../config/loadData.ts";
-import {Board} from "./board/index.ts";
+import {Board} from "./board";
 
 export class GameView extends PixiApplication {
     private gameLoader!: GameLoader;
-    private board!: Board;
+    public board!: Board;
 
     readonly width!: number;
     readonly height!: number;
@@ -164,7 +164,6 @@ export class GameView extends PixiApplication {
     }
 
     public async setup(devTools: boolean) {
-        //Load Assets  LoadingScreen
         await Assets.load({
             alias: "onAimLogo",
             src: "../assets/images/onaim-logo.png",
@@ -176,7 +175,6 @@ export class GameView extends PixiApplication {
 
         await this.init({
             background: "#292929",
-            // backgroundAlpha: 0,
             resizeTo: this.gameElement,
             antialias: true,
             resolution: window.devicePixelRatio || 1,

@@ -191,18 +191,20 @@ export class HtmlUI implements IUI {
         this.elements.selectedBetOption.textContent = `BET ${this.state.selectedBetOption.multiplier}X`;
     }
 
-    public showWinPopUp(amount: number, coinId: string): void {
-        this.elements.winPopUpText!.innerText = `You've won ${amount} ${coinId} 🔥`;
-        this.elements.winPopUp?.classList.toggle('hidden');
-    }
-
     public showNotification(headline: string, description: string): void {
-        console.log(123)
+        console.log(headline, "----", description)
         // this.elements.notificationSection!.classList.toggle('hidden');
     }
 
+    public showWinPopUp(amount: number, coinId: string): void {
+        this.elements.winPopUpText!.innerText = `You've won ${amount} ${coinId} 🔥`;
+        this.elements.winPopUp?.classList.remove('hidden');
+    }
+
     public hideWinPopUp(): void {
-        this.elements.winPopUp?.classList.toggle('hidden');
+        if (!this.elements.winPopUp?.classList.contains('hidden')) {
+            this.elements.winPopUp?.classList.add('hidden');
+        }
     }
 
     private spinButtonClickHandler() {
