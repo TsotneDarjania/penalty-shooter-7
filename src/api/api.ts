@@ -62,7 +62,7 @@ export class Api {
       Args extends ConstructorParameters<new (...args: any[]) => T>
   >(ctor: new (...args: Args) => T, ...args: Args): Promise<ReturnType<T["call"]>> {
     // Introduce a delay of 1 second (1000 ms)
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    // await new Promise(resolve => setTimeout(resolve, 3000));
 
     if (this.mocks[ctor.name]) {
       return this.mocks[ctor.name]() as ReturnType<T["call"]>;

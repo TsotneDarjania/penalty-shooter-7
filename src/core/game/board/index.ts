@@ -295,12 +295,14 @@ export class Board extends Container {
   }
 
   private addMask() {
+    console.log(this.width, this.height);
+
     const mask = new Graphics()
       .rect(
-        -this.width / 2 + 10,
-        -this.height / 2 + 8,
-        this.width - 15,
-        this.height - 11
+        -this.width / 2,
+        -this.height / 2,
+        this.width,
+        this.height - 10
       )
       .stroke({ width: 0 })
       .fill();
