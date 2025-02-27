@@ -19,3 +19,5 @@ export function calculatePixels(percentage: number, objectDimensions: ObjectDime
     const pixels = (percentage / 100) * dimension;
     return pixels;
 }  
+
+

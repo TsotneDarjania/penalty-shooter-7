@@ -12,16 +12,18 @@ type ReplaceAssetTypeWithString<T> = T extends AssetType
 type AssetsType = ReplaceAssetTypeWithString<LoadConfigType>;
 
 export type LoadConfigType = {
+  video: {
+    background: {
+      src: string;
+      data: any;
+    };
+  };
   images: {
     background: {
       src: string;
       data: any;
     };
     onAimLogo: {
-      src: string;
-      data: any;
-    };
-    test: {
       src: string;
       data: any;
     };
@@ -42,7 +44,77 @@ export type LoadConfigType = {
       };
     };
     symbols: {
-      vine: {
+      wine: {
+        json: {
+          src: string;
+          data: any;
+        };
+        skeleton: {
+          src: string;
+          data: any;
+        };
+      };
+      crown: {
+        json: {
+          src: string;
+          data: any;
+        };
+        skeleton: {
+          src: string;
+          data: any;
+        };
+      };
+      coin: {
+        json: {
+          src: string;
+          data: any;
+        };
+        skeleton: {
+          src: string;
+          data: any;
+        };
+      };
+      ring_4: {
+        json: {
+          src: string;
+          data: any;
+        };
+        skeleton: {
+          src: string;
+          data: any;
+        };
+      };
+      ring_3: {
+        json: {
+          src: string;
+          data: any;
+        };
+        skeleton: {
+          src: string;
+          data: any;
+        };
+      };
+      ring_2: {
+        json: {
+          src: string;
+          data: any;
+        };
+        skeleton: {
+          src: string;
+          data: any;
+        };
+      };
+      ring_1: {
+        json: {
+          src: string;
+          data: any;
+        };
+        skeleton: {
+          src: string;
+          data: any;
+        };
+      };
+      arpa: {
         json: {
           src: string;
           data: any;
