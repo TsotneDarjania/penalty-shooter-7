@@ -5,6 +5,18 @@ import {
 } from "./loadConfig";
 
 export const assets: LoadConfigType = {
+  music: {
+    background: {
+      src: "/assets/musics/greecetheme.mp3",
+      data: {
+        loop: true,
+      }
+    },
+    uiOtherButtons: {
+      src: "/assets/musics/UI/buttons.wav",
+      data: {}
+    }
+  },
   video: {
     background: {
       src: "../assets/videos/background.webm",

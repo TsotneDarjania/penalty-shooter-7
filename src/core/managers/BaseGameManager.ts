@@ -39,7 +39,7 @@ export abstract class BaseGameManager implements IBaseGameManager {
     protected initialData: any = {};
     protected selectedBetOption!: IBetOption;
     protected gameView!: GameView;
-    protected audioManager: AudioManager = AudioManager.createInstance();
+    protected audioManager!: AudioManager;
     protected eventEmitter: EventEmitter = eventBus;
     protected isReadyToStart: boolean = true;
 

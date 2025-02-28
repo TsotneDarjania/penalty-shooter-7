@@ -108,7 +108,9 @@ export class GameView extends PixiApplication {
     this.background.x = this.width / 2;
     this.background.y = this.height / 2;
 
-    this.background.scale = this.width / this.background.getSize().width + 0.01;
+    // this.background.scale = this.width / this.background.getSize().width + 0.01;
+    this.background.width = this.width;
+    this.background.height = this.height;
     this.add(this.background);
   }
 
@@ -128,8 +130,7 @@ export class GameView extends PixiApplication {
     });
 
     await this.init({
-      background: "#ffffff",
-      // backgroundAlpha: 0,
+      background: "rgba(255,255,255,0)",
       resizeTo: this.gameElement,
       antialias: true,
       resolution: window.devicePixelRatio || 2,
@@ -140,8 +141,6 @@ export class GameView extends PixiApplication {
     this.gameElement!.appendChild(this.canvas);
 
     window.addEventListener("resize", () => {
-      console.log("resize");
-
       this.width = this.gameElement.offsetWidth;
       this.height = this.gameElement.offsetHeight;
 

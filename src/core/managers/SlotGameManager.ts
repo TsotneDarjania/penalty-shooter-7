@@ -6,6 +6,7 @@ import {GameView} from "../game/GameView.ts";
 import {HtmlUI} from "../../ui/html"; // UI PACKAGE
 import {PlayerBalanceEndpoint} from "../../api/endpoints/playerBalanceEndpoint.ts";
 import {BetEndpoint} from "../../api/endpoints/betEndpoint.ts";
+import {AudioManager} from "./AudioManager.ts";
 
 interface ISlotGameManagerInstance {
     gameContainer: HTMLElement;
@@ -51,6 +52,8 @@ export class SlotGameManager extends BaseGameManager {
         this.eventEmitter.on("toggle-sound", () => {
             this.handleSoundButton()
         });
+        this.eventEmitter.on("toggle-nav-section", () => this.audioManager.playSound('uiOtherButtons'))
+        this.eventEmitter.on("toggle-bet-section", () => this.audioManager.playSound('uiOtherButtons'))
     }
 
     public static async createInstance(options: ISlotGameManagerInstance): Promise<SlotGameManager> {
@@ -86,6 +89,7 @@ export class SlotGameManager extends BaseGameManager {
         await this.gameView.startLoadingAssets();
         this.gameView.hideLoadingScreen();
         this.gameView.showGame();
+        this.audioManager = AudioManager.createInstance(GameAssets.music);
         // await new Promise(resolve => setTimeout(resolve, 1000));
 
         this.initialData = initialData.data;
@@ -109,10 +113,6 @@ export class SlotGameManager extends BaseGameManager {
         return this.state;
     }
 
-    public soundHandler() {
-        this.audioManager.isPlaying ? this.audioManager.stopMusic() : this.audioManager.playMusic();
-    }
-
     private async createGame(GameContainer: HTMLElement): Promise<void> {
         this.gameView = new GameView(GameContainer);
     }
@@ -122,7 +122,7 @@ export class SlotGameManager extends BaseGameManager {
     }
 
     private stopPlay(): void {
-        this.gameView.stopSpin(true, (this.responseData as BetResult).combination, [[...(this.responseData as BetResult).winningLines]]);
+        this.gameView.stopSpin(true, (this.responseData as BetResult).data.combination, [[...(this.responseData as BetResult).data.winningLines]]);
         this.ui.updateSpinButton(SpinButtonState.IDLE);
         this.setState(SpinButtonState.IDLE)
         this.responseData = null;
@@ -134,7 +134,6 @@ export class SlotGameManager extends BaseGameManager {
         if(this.state === SpinButtonState.SPINNING) return; // Response არაა მოსული და მოხდა STOP ღილაკზე დაჭერა
 
         if(this.isResponseReceived) { // Response მოსულია და მოხდა STOP ღილაკზე დაჭერა
-            console.log(123);
             this.stopPlay();
             return;
         }
@@ -157,8 +156,8 @@ export class SlotGameManager extends BaseGameManager {
     public async handleResult(result: any) {
         this.gameView.stopSpin(false, (this.responseData as BetResult).data.combination, [[...(this.responseData as BetResult).data.winningLines]]);
         this.isResponseReceived = true;
-        if(result.isWin){
-            this.ui.showWinPopUp(result.totalWinningAmount, result.coinId);
+        if(result.data.isWin){
+            this.ui.showWinPopUp(result.data.totalWinningAmount, result.data.coinId);
         }
         this.isResponseReceived = false;
         await this.getPlayerBalance();
@@ -179,11 +178,11 @@ export class SlotGameManager extends BaseGameManager {
     }
 
     private handleSoundButton(): void {
-        if (this.audioManager.isPlaying) {
-            this.audioManager.stopMusic();
+        if (this.audioManager.isBackgroundPlaying) {
+            this.audioManager.stopBackgroundMusic();
             this.ui.updateSoundButtonImage(false); // Update UI
         } else {
-            this.audioManager.playMusic();
+            this.audioManager.playBackgroundMusic();
             this.ui.updateSoundButtonImage(true); // Update UI
         }
     }
