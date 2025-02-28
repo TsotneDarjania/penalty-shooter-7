@@ -17,6 +17,14 @@ export type LoadConfigType = {
       src: string;
       data: any
     },
+    reelDrop: {
+      src: string;
+      data: any;
+    },
+    drySpin: {
+      src: string;
+      data: any;
+    },
     uiOtherButtons: {
       src: string;
       data: any;

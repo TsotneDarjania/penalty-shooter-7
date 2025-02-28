@@ -12,6 +12,16 @@ export const assets: LoadConfigType = {
         loop: true,
       }
     },
+    drySpin: {
+      src: "/assets/musics/dryspin.wav",
+      data: {
+
+      }
+    },
+    reelDrop: {
+      src: "/assets/musics/reeldrop.wav",
+      data: {}
+    },
     uiOtherButtons: {
       src: "/assets/musics/UI/buttons.wav",
       data: {}

@@ -54,6 +54,10 @@ export class SlotGameManager extends BaseGameManager {
         });
         this.eventEmitter.on("toggle-nav-section", () => this.audioManager.playSound('uiOtherButtons'))
         this.eventEmitter.on("toggle-bet-section", () => this.audioManager.playSound('uiOtherButtons'))
+        this.gameView.board.eventEmitter.on("reelFinishedSpin", () => {
+            this.audioManager.stopSound("drySpin")
+            this.audioManager.playSound("reelDrop")
+        })
     }
 
     public static async createInstance(options: ISlotGameManagerInstance): Promise<SlotGameManager> {
@@ -76,9 +80,13 @@ export class SlotGameManager extends BaseGameManager {
             error?: string,
         } = await this.handleApiResponse(this.getInitialData());
 
-        if(initialData.error){
+        console.log(initialData.data);
+
+        //@ts-ignore
+        if(initialData.error || initialData!.data.Succeeded === false){
             this.ui.showNotification(initialData.error, "dada");
             return;
+            //@ts-ignore
         }
 
         const balanceData = await this.getPlayerBalance();
@@ -140,6 +148,7 @@ export class SlotGameManager extends BaseGameManager {
 
         this.ui.hideWinPopUp();
 
+        this.audioManager.playSound('drySpin');
 
         this.setState(SpinButtonState.SPINNING);
         this.ui.updateSpinButton(SpinButtonState.SPINNING);
@@ -154,6 +163,7 @@ export class SlotGameManager extends BaseGameManager {
     }
 
     public async handleResult(result: any) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
         this.gameView.stopSpin(false, (this.responseData as BetResult).data.combination, [[...(this.responseData as BetResult).data.winningLines]]);
         this.isResponseReceived = true;
         if(result.data.isWin){

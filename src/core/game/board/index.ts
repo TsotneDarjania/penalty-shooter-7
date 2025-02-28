@@ -194,7 +194,7 @@ export class Board extends Container {
       reel.spinManager.eventEmitter.on(
         ReelStatusEvents.ReelSpinIsFinished,
         () => {
-          this.eventEmitter.emit("reelFinishedSpin");
+          // this.eventEmitter.emit("reelFinishedSpin");
           if (reel === this.reels[this.reels.length - 1]) {
             this.finishSpin();
           }

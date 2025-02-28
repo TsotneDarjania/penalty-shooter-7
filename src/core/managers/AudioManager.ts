@@ -14,7 +14,7 @@ export class AudioManager {
     private initializeAudio(audioList: Record<string, string>): void {
         for (const key in audioList) {
             if (audioList.hasOwnProperty(key)) {
-                const sound = new Howl({ src: [audioList[key]], loop: key === "background" });
+                const sound = new Howl({ src: [audioList[key]], loop: key === "background" || key === "drySpin" });
                 this.audioMap.set(key, sound); // Store by name
 
                 if (key === "background") {
@@ -22,6 +22,7 @@ export class AudioManager {
                 }
             }
         }
+        console.log(audioList);
     }
 
     public static createInstance(audioList: Record<string, string>): AudioManager {
