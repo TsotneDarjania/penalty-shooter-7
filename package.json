@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "@types/events": "^3.0.3",
+    "@types/howler": "^2.2.12",
     "typescript": "~5.7.2",
     "vite": "^6.1.0"
   },
@@ -20,6 +21,7 @@
     "events": "^3.3.0",
     "express": "^4.21.2",
     "gsap": "^3.12.7",
+    "howler": "^2.2.4",
     "pixi.js": "^8.8.0"
   }
 }

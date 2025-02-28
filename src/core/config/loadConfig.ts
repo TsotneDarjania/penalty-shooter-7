@@ -12,6 +12,16 @@ type ReplaceAssetTypeWithString<T> = T extends AssetType
 type AssetsType = ReplaceAssetTypeWithString<LoadConfigType>;
 
 export type LoadConfigType = {
+  music: {
+    background: {
+      src: string;
+      data: any
+    },
+    uiOtherButtons: {
+      src: string;
+      data: any;
+    }
+  },
   video: {
     background: {
       src: string;

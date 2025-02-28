@@ -1,41 +1,76 @@
+import { Howl } from "howler";
+
 export class AudioManager {
     private static instance: AudioManager;
-    private readonly music: HTMLAudioElement;
-    private isMuted: boolean = true;
+    private audioMap: Map<string, Howl> = new Map();
+    private backgroundMusic?: Howl;
+    private isMuted: boolean = false;
     private startedAudio: boolean = false;
 
-    protected constructor() {
-        this.music = new Audio("/music/fruit-background.mp3");
-        this.music.loop = true;
-        this.music.volume = 0;
+    private constructor(audioList: Record<string, string>) {
+        this.initializeAudio(audioList);
     }
 
-    public static createInstance(): AudioManager {
+    private initializeAudio(audioList: Record<string, string>): void {
+        for (const key in audioList) {
+            if (audioList.hasOwnProperty(key)) {
+                const sound = new Howl({ src: [audioList[key]], loop: key === "background" });
+                this.audioMap.set(key, sound); // Store by name
+
+                if (key === "background") {
+                    this.backgroundMusic = sound;
+                }
+            }
+        }
+    }
+
+    public static createInstance(audioList: Record<string, string>): AudioManager {
         if (!this.instance) {
-            this.instance = new AudioManager();
+            this.instance = new AudioManager(audioList);
         }
         return this.instance;
     }
 
-    playMusic(volume: number = 1): void {
+    public playSound(name: string): void {
+        const sound = this.audioMap.get(name);
+        if (sound && !this.isMuted) {
+            sound.play();
+        }
+    }
+
+    public stopSound(name: string): void {
+        const sound = this.audioMap.get(name);
+        if (sound) {
+            sound.stop();
+        }
+    }
+
+    public toggleMute(): void {
+        this.isMuted = !this.isMuted;
+        this.audioMap.forEach(sound => sound.mute(this.isMuted));
+    }
+
+    public playBackgroundMusic(): void {
         if(!this.startedAudio){
             this.startedAudio = true;
-            this.music.play();
+            this.backgroundMusic!.play();
         }
+
         if (this.isMuted) {
             this.isMuted = false;
-            this.music.volume = volume;
+            this.backgroundMusic?.volume(1);
         }
     }
 
-    stopMusic(): void {
+    /** Gradually decrease background music volume */
+    public stopBackgroundMusic(): void {
         if (!this.isMuted) {
             this.isMuted = true;
-            this.music.volume = 0;
+            this.backgroundMusic!.volume(0);
         }
     }
 
-    public get isPlaying(): boolean {
-        return !(this.music.volume === 0);
+    public get isBackgroundPlaying(): boolean {
+        return (this.backgroundMusic?.volume() === 1);
     }
 }

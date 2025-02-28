@@ -142,8 +142,7 @@ export class GameView extends PixiApplication {
     }
 
     await this.init({
-      background: "#ffffff",
-      // backgroundAlpha: 0,
+      background: "rgba(255,255,255,0)",
       resizeTo: this.gameElement,
       // antialias: true,
       resolution: resolution || 1,
@@ -154,8 +153,6 @@ export class GameView extends PixiApplication {
     this.gameElement!.appendChild(this.canvas);
 
     window.addEventListener("resize", () => {
-      console.log("resize");
-
       this.width = this.gameElement.offsetWidth;
       this.height = this.gameElement.offsetHeight;
 

@@ -64,7 +64,6 @@ export class HtmlUI implements IUI {
     public initialize(uiContainer: HTMLElement): void {
         this.elements.container = uiContainer;
 
-
         this.elements.container.innerHTML = html;
 
         this.elements.soundButton = uiContainer.querySelector('#sound-section button');
@@ -124,6 +123,7 @@ export class HtmlUI implements IUI {
     private toggleBetOptions(): void {
         if (this.elements.betOptions) {
             this.elements.betOptions.classList.toggle('hidden');
+            this.eventEmitter.emit("toggle-bet-section");
         }
     }
 
@@ -142,6 +142,7 @@ export class HtmlUI implements IUI {
     private toggleNavSection(): void {
         // @ts-ignore
         this.elements.navContainer.classList.toggle('hidden');
+        this.eventEmitter.emit("toggle-nav-section");
     }
 
     public setBalance(newBalance: number): void {
