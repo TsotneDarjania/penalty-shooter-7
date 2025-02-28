@@ -71,6 +71,10 @@ export class GameView extends PixiApplication {
     combination: number[][] = [],
     lines: number[][]
   ): void {
+    if (combination === undefined) {
+      console.log("Combination is Undefined");
+      return;
+    }
     this.board.stopSpin(skip, combination, { lines: lines });
   }
 
@@ -129,11 +133,19 @@ export class GameView extends PixiApplication {
       },
     });
 
+    let resolution = 1;
+
+    if (window.innerWidth > 500) {
+      resolution = window.devicePixelRatio * 1.7;
+    } else {
+      resolution = window.devicePixelRatio * 0.6;
+    }
+
     await this.init({
       background: "rgba(255,255,255,0)",
       resizeTo: this.gameElement,
-      antialias: true,
-      resolution: window.devicePixelRatio || 2,
+      // antialias: true,
+      resolution: resolution || 1,
       autoDensity: true,
     });
 

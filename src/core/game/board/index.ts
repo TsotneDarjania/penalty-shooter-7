@@ -110,37 +110,23 @@ export class Board extends Container {
       skeleton: skeletonPath,
       atlas: atlasPath,
     });
-    // this.line_0_0_0.width = this.width + 200;
-    // this.line_0_0_0.height = 420;
-    this.line_0_0_0.y += 134;
-    this.line_0_0_0.x += 45;
-    this.line_0_0_0.scale = 0.2;
-    this.line_0_0_0.width += 600;
-    // this.line_0_0_0.rotation = -0.73039;
+
+    this.line_0_0_0.y += 460;
     this.addChild(this.line_0_0_0);
 
     this.line_1_1_1 = Spine.from({
       skeleton: skeletonPath,
       atlas: atlasPath,
     });
-    // this.line_1_1_1.width = this.width + 200;
-    // this.line_1_1_1.height = 420;
-    this.line_1_1_1.y += 6;
-    this.line_1_1_1.x += 45;
-    this.line_1_1_1.scale = 0.2;
-    this.line_1_1_1.width += 600;
-    // this.line_1_1_1.rotation = -0.730398;
+    this.line_1_1_1.y += 200;
+    this.line_1_1_1.x += 0;
     this.addChild(this.line_1_1_1);
 
     this.line_2_2_2 = Spine.from({
       skeleton: skeletonPath,
       atlas: atlasPath,
     });
-    this.line_2_2_2.scale = 0.1;
-    this.line_2_2_2.y -= 68;
-    this.line_2_2_2.x += 45;
-    this.line_2_2_2.width += 600;
-    // this.line_2_2_2.rotation = -0.73039;
+    this.line_2_2_2.y -= 57;
     this.addChild(this.line_2_2_2);
 
     this.line_0_1_2 = Spine.from({
@@ -148,20 +134,19 @@ export class Board extends Container {
       atlas: atlasPath,
     });
 
-    this.line_0_1_2.scale = 0.61;
-    this.line_0_1_2.width += 0;
-    this.line_0_1_2.y += 6;
-    this.line_0_1_2.rotation = -0.73039;
+    this.line_0_1_2.y += 170;
+    this.line_0_1_2.x += 120;
+    this.line_0_1_2.rotation = -0.78019;
     this.addChild(this.line_0_1_2);
 
     this.line_2_1_0 = Spine.from({
       skeleton: skeletonPath,
       atlas: atlasPath,
     });
-    this.line_2_1_0.scale = 0.61;
-    this.line_2_1_0.width += 0;
-    this.line_2_1_0.rotation = 0.73039;
-    this.line_2_1_0.y -= 1;
+
+    this.line_2_1_0.rotation = 0.78019;
+    this.line_2_1_0.y += 170;
+    this.line_2_1_0.x -= 120;
     this.addChild(this.line_2_1_0);
 
     this.line_0_0_0.state.setAnimation(0, "Hide", false);
@@ -170,16 +155,22 @@ export class Board extends Container {
     this.line_0_1_2.state.setAnimation(0, "Hide", false);
     this.line_2_1_0.state.setAnimation(0, "Hide", false);
 
+    this.line_0_0_0.blendMode = "difference";
+    this.line_1_1_1.blendMode = "difference";
+    this.line_2_2_2.blendMode = "difference";
+    this.line_0_1_2.blendMode = "difference";
+    this.line_2_1_0.blendMode = "difference";
+
     // this.line_0_0_0.alpha = 0.4;
     // this.line_1_1_1.alpha = 0.4;
     // this.line_2_2_2.alpha = 0.4;
     // this.line_0_1_2.alpha = 0.4;
     // this.line_2_1_0.alpha = 0.4;
-    this.line_0_0_0.zIndex = -3;
-    this.line_1_1_1.zIndex = -3;
-    this.line_2_2_2.zIndex = -3;
-    this.line_0_1_2.zIndex = -3;
-    this.line_2_1_0.zIndex = -3;
+    // this.line_0_0_0.zIndex = -3;
+    // this.line_1_1_1.zIndex = -3;
+    // this.line_2_2_2.zIndex = -3;
+    // this.line_0_1_2.zIndex = -3;
+    // this.line_2_1_0.zIndex = -3;
   }
 
   private adjustReelsYPositions() {
@@ -203,6 +194,7 @@ export class Board extends Container {
       reel.spinManager.eventEmitter.on(
         ReelStatusEvents.ReelSpinIsFinished,
         () => {
+          this.eventEmitter.emit("reelFinishedSpin");
           if (reel === this.reels[this.reels.length - 1]) {
             this.finishSpin();
           }
@@ -220,25 +212,23 @@ export class Board extends Container {
   private finishSpin() {
     this.eventEmitter.emit("spinIsFinished");
     this.state = "FinishedSpin";
+    this.reset();
 
-    if (this.winnings!.lines.length > 0) {
-      this.showWinningAnimations();
-    } else {
-      this.eventEmitter.emit("reset");
-      this.reset();
+    if (this.winnings) {
+      if (this.winnings.lines.length > 0) {
+        this.showWinningAnimations();
+      }
     }
   }
 
   private reset() {
-    setTimeout(() => {
-      this.winnings = undefined;
-      this.resultCombination = undefined;
-      this.command = "none";
-      this.state = "readyForSpin";
-      this.isStartedStop = false;
-      this.stopWithSkipSpin = false;
-      this.eventEmitter.emit("reset");
-    }, 100);
+    // this.winnings = undefined;
+    this.resultCombination = undefined;
+    this.command = "none";
+    this.state = "readyForSpin";
+    this.isStartedStop = false;
+    this.stopWithSkipSpin = false;
+    this.eventEmitter.emit("reset");
   }
 
   private async showWinningAnimations() {
@@ -298,7 +288,7 @@ export class Board extends Container {
     const mask = new Graphics()
       .rect(
         -this.width / 2,
-        -this.height / 2,
+        -this.height / 2 + 20,
         this.width,
         this.height - 10
       )
@@ -348,8 +338,10 @@ export class Board extends Container {
   public stopSpin(
     isSkipSpin: boolean,
     combination?: Array<Array<number>>,
-    winnings?: {
+    winnings: {
       lines: number[][];
+    } = {
+      lines: [[]],
     }
   ) {
     if (winnings) {
