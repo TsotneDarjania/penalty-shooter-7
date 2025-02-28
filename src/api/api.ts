@@ -13,14 +13,14 @@ export abstract class Endpoint<
   abstract baseUrl?: string;
   abstract method?: "GET" | "POST";
   static headers: Record<string, string> = {};
-  static commonQueryParams: Record<string, string> = {};
+  static commonQueryparams: Record<string, string> = {};
 
   static setHeader(key: string, value: string) {
     this.headers[key] = value;
   }
 
-  static setCommonQueryParams(key: string, value: string) {
-    this.commonQueryParams[key] = value;
+  static setCommonQueryparams(key: string, value: string) {
+    this.commonQueryparams[key] = value;
   }
 
   constructor(private params: TParams) {}
@@ -28,7 +28,7 @@ export abstract class Endpoint<
   async call(callBack?: (response: TResponse) => void): Promise<TResponse> {
     let url = (this.baseUrl || Api.globalBaseUrl) + this.path;
 
-    let queryParams = { ...this.params?.query, ...Endpoint.commonQueryParams };
+    let queryParams = { ...this.params?.query, ...Endpoint.commonQueryparams };
     if (queryParams) {
       const queryString = Object.entries(queryParams)
         .map(
@@ -57,35 +57,24 @@ export abstract class Endpoint<
 
 export class Api {
   static globalBaseUrl: string;
-  static async call<
-      T extends Endpoint<any, any>,
-      Args extends ConstructorParameters<new (...args: any[]) => T>
-  >(
-      ctor: new (...args: Args) => T,
-      ...args: Args
-  ): Promise<{ data?: ReturnType<T["call"]>; error?: string }> {
-    try {
-      if (this.mocks[ctor.name]) {
-        return { data: this.mocks[ctor.name]() as ReturnType<T["call"]> };
-      }
+  static call<
+    T extends Endpoint<any, any>,
+    Args extends ConstructorParameters<new (...args: any[]) => T>
+  >(ctor: new (...args: Args) => T, ...args: Args): ReturnType<T["call"]> {
+    if (this.mocks[ctor.name])
+      return this.mocks[ctor.name]() as ReturnType<T["call"]>;
 
-      const instance = new ctor(...args);
-      return { data: await instance.call() as ReturnType<T["call"]> };
-    } catch (error) {
-      console.error(`Network error in ${ctor.name}:`, error);
-
-      return { error: `Network error: ${error instanceof Error ? error.message : "Unknown error"}` };
-    }
+    const instance = new ctor(...args);
+    console.log(instance);
+    return instance.call() as ReturnType<T["call"]>;
   }
-
-
 
   static setHeader(key: string, value: string) {
     Endpoint.setHeader(key, value);
   }
 
   static setCommonQueryparams(key: string, value: string) {
-    Endpoint.setCommonQueryParams(key, value)
+    Endpoint.setCommonQueryparams(key, value);
   }
 
   static mocks: Record<string, () => {}> = {};

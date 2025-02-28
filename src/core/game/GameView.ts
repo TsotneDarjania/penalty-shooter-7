@@ -4,12 +4,15 @@ import {
   ContainerChild,
   Sprite,
   Texture,
+  Application,
 } from "pixi.js";
 import { initDevtools } from "@pixi/devtools";
 import { GameLoader } from "./loader";
 import { gameAssets } from "../config/loadData.ts";
 import { Board } from "./board/index.ts";
 import { boardDataConfig } from "./config/boardConfig.ts";
+import { Spine } from "@esotericsoftware/spine-pixi-v8";
+import { CustomSprite } from "../components/customSprite.ts";
 
 export class GameView extends PixiApplication {
   private gameLoader!: GameLoader;
@@ -23,9 +26,6 @@ export class GameView extends PixiApplication {
 
   constructor(public gameElement: HTMLElement) {
     super();
-
-    this.width = this.gameElement.offsetWidth;
-    this.height = this.gameElement.offsetHeight;
 
     this.createGameLoader();
   }
@@ -88,7 +88,6 @@ export class GameView extends PixiApplication {
     );
 
     this.board.zIndex = 1;
-    this.board.scale = this.setScale(1);
     this.add(this.board);
   }
 
@@ -108,13 +107,8 @@ export class GameView extends PixiApplication {
 
   private addBackground() {
     this.background = new Sprite(Texture.from(GameAssets.video.background));
-    this.background.anchor = 0.5;
-    this.background.x = this.width / 2;
-    this.background.y = this.height / 2;
-
-    // this.background.scale = this.width / this.background.getSize().width + 0.01;
-    this.background.width = this.width;
-    this.background.height = this.height;
+    // this.background.width = this.width;
+    // this.background.height = this.height;
     this.add(this.background);
   }
 
@@ -133,29 +127,21 @@ export class GameView extends PixiApplication {
       },
     });
 
-    let resolution = 1;
-
-    if (window.innerWidth > 500) {
-      resolution = window.devicePixelRatio * 1.7;
-    } else {
-      resolution = window.devicePixelRatio * 0.6;
-    }
+    this.width = 1080;
+    this.height = 1920;
 
     await this.init({
+      width: this.width, // Fixed internal width
+      height: this.height, // Adapt to container height
       background: "rgba(255,255,255,0)",
-      resizeTo: this.gameElement,
-      // antialias: true,
-      resolution: resolution || 1,
-      autoDensity: true,
+      antialias: true,
+      resolution: window.devicePixelRatio || 1,
     });
 
     devTools && (await initDevtools(this));
     this.gameElement!.appendChild(this.canvas);
 
     window.addEventListener("resize", () => {
-      this.width = this.gameElement.offsetWidth;
-      this.height = this.gameElement.offsetHeight;
-
       this.destroyGame();
       this.showGame();
     });

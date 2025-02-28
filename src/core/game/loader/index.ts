@@ -33,6 +33,7 @@ export class GameLoader {
   }
 
   private addBackground() {
+    console.log(this.gameView.width, this.gameView.height);
     this.background = new Graphics();
     this.background.rect(0, 0, this.gameView.width, this.gameView.height);
     this.background.fill("black");

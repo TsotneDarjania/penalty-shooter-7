@@ -150,7 +150,10 @@ export class SpinManager {
     this.isSkipSpin = skipSpin;
     this.isLastSpin = true;
     this.resultCombination = combination;
-    setTimeout(() => this.reel.board.eventEmitter.emit("reelFinishedSpin"), 300);
+    setTimeout(
+      () => this.reel.board.eventEmitter.emit("reelFinishedSpin"),
+      400
+    );
   }
 
   public reset() {

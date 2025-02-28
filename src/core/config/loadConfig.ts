@@ -13,135 +13,31 @@ type AssetsType = ReplaceAssetTypeWithString<LoadConfigType>;
 
 export type LoadConfigType = {
   music: {
-    background: {
-      src: string;
-      data: any
-    },
-    reelDrop: {
-      src: string;
-      data: any;
-    },
-    drySpin: {
-      src: string;
-      data: any;
-    },
-    uiOtherButtons: {
-      src: string;
-      data: any;
-    }
-  },
+    background: AssetType;
+    reelDrop: AssetType;
+    drySpin: AssetType;
+    uiOtherButtons: AssetType;
+  };
   video: {
-    background: {
-      src: string;
-      data: any;
-    };
+    background: AssetType;
   };
   images: {
-    background: {
-      src: string;
-      data: any;
-    };
-    onAimLogo: {
-      src: string;
-      data: any;
-    };
-    defaultWhiteImage: {
-      src: string;
-      data: any;
-    };
+    test: AssetType;
+    background: AssetType;
+    onAimLogo: AssetType;
+    defaultWhiteImage: AssetType;
   };
   animations: {
-    line: {
-      json: {
-        src: string;
-        data: any;
-      };
-      skeleton: {
-        src: string;
-        data: any;
-      };
-    };
+    line: SpineAssetsType;
     symbols: {
-      wine: {
-        json: {
-          src: string;
-          data: any;
-        };
-        skeleton: {
-          src: string;
-          data: any;
-        };
-      };
-      crown: {
-        json: {
-          src: string;
-          data: any;
-        };
-        skeleton: {
-          src: string;
-          data: any;
-        };
-      };
-      coin: {
-        json: {
-          src: string;
-          data: any;
-        };
-        skeleton: {
-          src: string;
-          data: any;
-        };
-      };
-      ring_4: {
-        json: {
-          src: string;
-          data: any;
-        };
-        skeleton: {
-          src: string;
-          data: any;
-        };
-      };
-      ring_3: {
-        json: {
-          src: string;
-          data: any;
-        };
-        skeleton: {
-          src: string;
-          data: any;
-        };
-      };
-      ring_2: {
-        json: {
-          src: string;
-          data: any;
-        };
-        skeleton: {
-          src: string;
-          data: any;
-        };
-      };
-      ring_1: {
-        json: {
-          src: string;
-          data: any;
-        };
-        skeleton: {
-          src: string;
-          data: any;
-        };
-      };
-      arpa: {
-        json: {
-          src: string;
-          data: any;
-        };
-        skeleton: {
-          src: string;
-          data: any;
-        };
-      };
+      wine: SpineAssetsType;
+      crown: SpineAssetsType;
+      coin: SpineAssetsType;
+      ring_4: SpineAssetsType;
+      ring_3: SpineAssetsType;
+      ring_2: SpineAssetsType;
+      ring_1: SpineAssetsType;
+      arpa: SpineAssetsType;
     };
   };
 };
@@ -149,6 +45,11 @@ export type LoadConfigType = {
 type AssetType = {
   src: string;
   data: object;
+};
+
+type SpineAssetsType = {
+  json: AssetType;
+  skeleton: AssetType;
 };
 
 // Minimal helper that walks through the config and,
