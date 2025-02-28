@@ -71,7 +71,6 @@
 
 .game-panel-container > button:disabled {
     opacity: 0.5;
-    cursor: not-allowed;
 }
 
 .game-panel-container, .game-panel-container-masked {

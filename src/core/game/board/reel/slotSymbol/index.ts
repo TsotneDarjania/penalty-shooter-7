@@ -29,8 +29,6 @@ export class SlotSymbol extends Container {
 
     this.addFakeImage();
 
-    console.log(key);
-
     // @ts-ignore
     const atlasPath = key.replace(/\/([^\/]+)\.json$/, "/$1.atlas");
     this.spine = Spine.from({

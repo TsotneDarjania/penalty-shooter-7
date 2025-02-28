@@ -295,8 +295,6 @@ export class Board extends Container {
   }
 
   private addMask() {
-    console.log(this.width, this.height);
-
     const mask = new Graphics()
       .rect(
         -this.width / 2,
