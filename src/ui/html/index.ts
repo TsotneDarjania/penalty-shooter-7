@@ -57,7 +57,7 @@ export class HtmlUI implements IUI {
 
     public showUI(): void{
         if(this.elements.playerPanelContainer){
-            this.elements.playerPanelContainer.style.display = 'block';
+            this.elements.playerPanelContainer.style.display = 'flex';
         }
     }
 

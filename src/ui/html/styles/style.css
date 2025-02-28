@@ -168,9 +168,7 @@
     padding: 12px;
 }
 
-.hidden {
-    display: none;
-}
+
 
 .bet-options-list {
     display: flex;
@@ -272,4 +270,8 @@
 .notification-container span {
     color: #FFF;
     font-size: 13px;
+}
+
+.hidden {
+    display: none;
 }

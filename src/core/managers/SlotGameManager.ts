@@ -41,7 +41,6 @@ export class SlotGameManager extends BaseGameManager {
             this.isReadyToStart = true;
             this.setState(SpinButtonState.IDLE)
             this.ui.updateSpinButton(SpinButtonState.IDLE);
-            console.log('Ready to start');
         });
         this.eventEmitter.on("spin-button-click", () => this.startPlay())
         this.eventEmitter.on("send-bet-option", (betOption) => this.setGetSelectedBetOption(betOption));
@@ -63,17 +62,19 @@ export class SlotGameManager extends BaseGameManager {
         this.ui = HtmlUI.getInstance();
         this.ui.initialize(UIContainer);
 
-        const data = await this.handleApiResponse(this.getInitialData());
+        const initialData: {
+            data: object,
+            error?: string,
+        } = await this.handleApiResponse(this.getInitialData());
 
-        if(data.error){
-            this.ui.showNotification(data.error, "dada")
+        if(initialData.error){
+            this.ui.showNotification(initialData.error, "dada");
+            return;
         }
 
-        const initialData: {
-            betPrices: any
-        } = data;
+        const balanceData = await this.getPlayerBalance();
 
-        await this.getPlayerBalance();
+        this.setBalance(balanceData.data.balance);
 
         // Wait for assets to load (Game assets)
         await this.gameView.startLoadingAssets();
@@ -81,8 +82,8 @@ export class SlotGameManager extends BaseGameManager {
         this.gameView.showGame();
         // await new Promise(resolve => setTimeout(resolve, 1000));
 
-        this.initialData = initialData;
-        this.selectedBetOption = initialData.betPrices[0];
+        this.initialData = initialData.data;
+        this.selectedBetOption = this.initialData.betPrices[0];
 
         // DRAW UI
         this.ui.setEventEmitter(this.eventEmitter);
@@ -164,9 +165,8 @@ export class SlotGameManager extends BaseGameManager {
         // eventBus.emit(SlotEventKey.STATE_CHANGE, this.state);
     }
 
-    public async getPlayerBalance(): Promise<void> {
-        const balanceData: any = await Api.call(PlayerBalanceEndpoint);
-        this.setBalance(balanceData.balance);
+    public async getPlayerBalance(): Promise<any> {
+        return await Api.call(PlayerBalanceEndpoint);
     }
 
     async getInitialData(): Promise<any> {
