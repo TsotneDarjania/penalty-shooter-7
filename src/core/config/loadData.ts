@@ -41,6 +41,7 @@ export const assets: LoadConfigType = {
         data: {
           scaleMode: "linear",
           autoGenerateMipMaps: true,
+          blendMode: "difference",
         },
       },
       skeleton: {
@@ -48,6 +49,7 @@ export const assets: LoadConfigType = {
         data: {
           scaleMode: "linear",
           autoGenerateMipMaps: true,
+          blendMode: "difference",
         },
       },
     },
@@ -169,6 +171,7 @@ export const assets: LoadConfigType = {
           src: "../assets/animations/arpa/arpa.json",
           data: {
             scaleMode: "nearest",
+
             // autoGenerateMipMaps: true,
           },
         },
