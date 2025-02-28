@@ -6,6 +6,7 @@ import { GameView } from "../game/GameView.ts";
 import { HtmlUI } from "../../ui/html"; // UI PACKAGE
 import { PlayerBalanceEndpoint } from "../../api/endpoints/playerBalanceEndpoint.ts";
 import { BetEndpoint } from "../../api/endpoints/betEndpoint.ts";
+import { getRandomIntInRange } from "../game/board/helper/math.ts";
 
 interface ISlotGameManagerInstance {
   gameContainer: HTMLElement;
@@ -147,12 +148,12 @@ export class SlotGameManager extends BaseGameManager {
   }
 
   public async startPlay(): Promise<void> {
+    console.log("START ");
     // CASE 1 - როდესაც SPINNING და DATA არ არის მოსული, ღილაკზე დაჭერა მოხდა, ამ დროს რა ხდება
     if (this.state === SpinButtonState.SPINNING) return; // Response არაა მოსული და მოხდა STOP ღილაკზე დაჭერა
 
     if (this.isResponseReceived) {
       // Response მოსულია და მოხდა STOP ღილაკზე დაჭერა
-      console.log(123);
       this.stopPlay();
       return;
     }
@@ -170,11 +171,14 @@ export class SlotGameManager extends BaseGameManager {
     this.responseData = this.handleApiResponse(
       await Api.call(BetEndpoint, this.selectedBetOption.betPriceId)
     );
+    await new Promise((resolve) =>
+      setTimeout(resolve, getRandomIntInRange(1000, 5000))
+    );
     await this.handleResult(this.responseData);
   }
 
   public async handleResult(result: any) {
-    console.log(result);
+    console.log("STOP SPIN");
     this.gameView.stopSpin(
       false,
       (this.responseData as BetResult).data.combination,

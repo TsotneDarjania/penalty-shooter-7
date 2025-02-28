@@ -71,6 +71,10 @@ export class GameView extends PixiApplication {
     combination: number[][] = [],
     lines: number[][]
   ): void {
+    if (combination === undefined) {
+      console.log("Combination is Undefined");
+      return;
+    }
     this.board.stopSpin(skip, combination, { lines: lines });
   }
 
