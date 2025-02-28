@@ -60,17 +60,24 @@ export class Api {
   static async call<
       T extends Endpoint<any, any>,
       Args extends ConstructorParameters<new (...args: any[]) => T>
-  >(ctor: new (...args: Args) => T, ...args: Args): Promise<ReturnType<T["call"]>> {
-    // Introduce a delay of 1 second (1000 ms)
-    // await new Promise(resolve => setTimeout(resolve, 3000));
+  >(
+      ctor: new (...args: Args) => T,
+      ...args: Args
+  ): Promise<{ data?: ReturnType<T["call"]>; error?: string }> {
+    try {
+      if (this.mocks[ctor.name]) {
+        return { data: this.mocks[ctor.name]() as ReturnType<T["call"]> };
+      }
 
-    if (this.mocks[ctor.name]) {
-      return this.mocks[ctor.name]() as ReturnType<T["call"]>;
+      const instance = new ctor(...args);
+      return { data: await instance.call() as ReturnType<T["call"]> };
+    } catch (error) {
+      console.error(`Network error in ${ctor.name}:`, error);
+
+      return { error: `Network error: ${error instanceof Error ? error.message : "Unknown error"}` };
     }
-
-    const instance = new ctor(...args);
-    return await instance.call() as ReturnType<T["call"]>;
   }
+
 
 
   static setHeader(key: string, value: string) {

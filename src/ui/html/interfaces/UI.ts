@@ -13,5 +13,6 @@ export interface IUI {
     updateSpinButton(state: SpinButtonState): void;
     showWinPopUp(amount: number, coinId: string): void;
     hideWinPopUp(): void;
+    showUI(): void;
     showNotification(headline: string, description: string): void;
 }

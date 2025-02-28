@@ -13,7 +13,7 @@ import { boardDataConfig } from "./config/boardConfig.ts";
 
 export class GameView extends PixiApplication {
   private gameLoader!: GameLoader;
-  private board!: Board;
+  board!: Board;
   private background!: Sprite;
 
   width!: number;

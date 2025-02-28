@@ -60,10 +60,18 @@ export class SlotGameManager extends BaseGameManager {
         await this.createGame(GameContainer);
         await this.gameView.setup(true);
         this.gameView.showLoadingScreen();
+        this.ui = HtmlUI.getInstance();
+        this.ui.initialize(UIContainer);
+
+        const data = await this.handleApiResponse(this.getInitialData());
+
+        if(data.error){
+            this.ui.showNotification(data.error, "dada")
+        }
 
         const initialData: {
             betPrices: any
-        } = await this.getInitialData();
+        } = data;
 
         await this.getPlayerBalance();
 
@@ -77,9 +85,8 @@ export class SlotGameManager extends BaseGameManager {
         this.selectedBetOption = initialData.betPrices[0];
 
         // DRAW UI
-        this.ui = HtmlUI.getInstance();
         this.ui.setEventEmitter(this.eventEmitter);
-        this.ui.initialize(UIContainer);
+        this.ui.showUI();
         this.ui.setBalance(this.balance.amount);
         this.ui.setBetOptions(this.initialData.betPrices);
 

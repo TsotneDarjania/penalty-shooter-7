@@ -9,6 +9,7 @@ export class HtmlUI implements IUI {
 
     private elements = {
         container: null as HTMLElement | null,
+        playerPanelContainer: null as HTMLElement | null,
         soundButton: null as HTMLButtonElement | null,
         soundButtonImg: null as HTMLImageElement | null,
         navSection: null as HTMLElement | null,
@@ -54,8 +55,15 @@ export class HtmlUI implements IUI {
         this.eventEmitter = eventBus;
     }
 
+    public showUI(): void{
+        if(this.elements.playerPanelContainer){
+            this.elements.playerPanelContainer.style.display = 'block';
+        }
+    }
+
     public initialize(uiContainer: HTMLElement): void {
         this.elements.container = uiContainer;
+
 
         this.elements.container.innerHTML = html;
 
@@ -72,6 +80,9 @@ export class HtmlUI implements IUI {
         this.elements.navContainer = uiContainer.querySelector('#nav-container');
         this.elements.winPopUpText = uiContainer.querySelector('#win-popup-text') || null;
         this.elements.notificationSection = uiContainer.querySelector('#notification-section');
+        this.elements.playerPanelContainer = uiContainer.querySelector('#game-panel-container');
+
+        this.elements.playerPanelContainer!.style.display= 'none';
 
         if (this.elements.soundButton) {
             this.elements.soundButton.addEventListener('click', () => this.toggleSound());
@@ -192,8 +203,7 @@ export class HtmlUI implements IUI {
     }
 
     public showNotification(headline: string, description: string): void {
-        console.log(headline, "----", description)
-        // this.elements.notificationSection!.classList.toggle('hidden');
+        this.elements.notificationSection!.classList.toggle('hidden');
     }
 
     public showWinPopUp(amount: number, coinId: string): void {

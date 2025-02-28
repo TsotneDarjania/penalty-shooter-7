@@ -4,8 +4,8 @@ import {setupEndpoints} from "./api/endpoints";
 (async () => {
     setupEndpoints();
 
-    const GameContainer = document.getElementById("game-container") as HTMLElement;
-    const UIContainer = document.getElementById("game-ui") as HTMLElement;
+    const GameContainer: HTMLElement = document.getElementById("game-container") as HTMLElement;
+    const UIContainer: HTMLElement = document.getElementById("game-ui") as HTMLElement;
 
     // BOSS 😎
     await SlotGameManager.createInstance({
