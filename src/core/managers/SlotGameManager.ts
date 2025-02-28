@@ -27,7 +27,6 @@ export class SlotGameManager extends BaseGameManager {
   private state: SpinButtonState = SpinButtonState.IDLE;
   private ui!: IUI;
   private responseData?: BetResult = undefined;
-  private initialData?: GameInitData;
 
   private constructor() {
     super();
@@ -53,8 +52,15 @@ export class SlotGameManager extends BaseGameManager {
       this.audioManager.playSound("uiOtherButtons")
     );
     this.gameView.board.eventEmitter.on("reelFinishedSpin", () => {
-      this.audioManager.stopSound("drySpin");
-      this.audioManager.playSound("reelDrop");
+      console.log(this.counterForReelDrop)
+      if(this.counterForReelDrop == 3){
+         this.audioManager.playSound("stopSpin")
+        this.counterForReelDrop = 0;
+      }else{
+        this.delayTimer !== null && this.audioManager.playSound("reelDrop");
+        this.audioManager.stopSound("drySpin");
+        this.counterForReelDrop += 1;
+      }
     });
   }
 
@@ -106,10 +112,6 @@ export class SlotGameManager extends BaseGameManager {
     this.ui.showUI();
     this.ui.setBalance(this.balance.amount);
     this.ui.setBetOptions(this.initialData.betPrices);
-
-    if (!this.canMakeBet()) {
-      this.ui.updateSpinButton(SpinButtonState.DISABLED);
-    }
   }
 
   //@ts-ignore
@@ -128,39 +130,43 @@ export class SlotGameManager extends BaseGameManager {
     );
   }
 
-  private stopPlay(): void {
-    this.gameView.stopSpin(true, this.responseData?.combination, [
-      (this.responseData as BetResult).winningLines,
-    ]);
-    this.ui.updateSpinButton(SpinButtonState.IDLE);
-    this.setState(SpinButtonState.IDLE);
-    this.isResponseReceived = false;
-  }
+  // private stopPlay(): void {
+  //   this.gameView.stopSpin(true, this.responseData?.combination, [
+  //     (this.responseData as BetResult).winningLines,
+  //   ]);
+  //   this.ui.updateSpinButton(SpinButtonState.IDLE);
+  //   this.setState(SpinButtonState.IDLE);
+  //   this.isResponseReceived = false;
+  //   this.handleResult(this.responseData as BetResult);
+  // }
 
   public async startPlay(): Promise<void> {
     if (!this.canMakeBet()) {
-      this.ui.showNotification("Error", "Not enough balance!");
+        this.ui.updateSpinButton(SpinButtonState.DISABLED);
+        this.ui.showNotification("Error", "Not enough balance!");
+        setTimeout(() => {
+          this.ui.updateSpinButton(SpinButtonState.IDLE);
+          this.ui.hideNotification()
+        }, 2000)
       return;
     }
 
-    // CASE 1 - როდესაც SPINNING და DATA არ არის მოსული, ღილაკზე დაჭერა მოხდა, ამ დროს რა ხდება
-    if (this.state === SpinButtonState.SPINNING) return; // Response არაა მოსული და მოხდა STOP ღილაკზე დაჭერა
+    // if (this.state === SpinButtonState.SPINNING) return;
 
     if (this.isResponseReceived) {
-      // Response მოსულია და მოხდა STOP ღილაკზე დაჭერა
-      this.stopPlay();
+      //@ts-ignore
+      clearTimeout(this.delayTimer);
+      this.delayTimer = null;
+      await this.handleResult(this.responseData as BetResult);
       return;
     }
 
     this.ui.hideWinPopUp();
 
-    setTimeout(() => {
-      this.audioManager.playSound("drySpin");
-    }, 300);
-
     this.setState(SpinButtonState.SPINNING);
     this.ui.updateSpinButton(SpinButtonState.SPINNING);
     this.gameView.startSpin();
+    setTimeout(() => this.audioManager.playSound("drySpin"), 250)
     this.setBalance({
       ...this.balance,
       amount: this.balance.amount - this.selectedBetOption.betAmount,
@@ -172,17 +178,29 @@ export class SlotGameManager extends BaseGameManager {
       BetEndpoint,
       this.selectedBetOption.betPriceId
     );
-    await this.handleResult(this.responseData);
+
+    console.log('data')
+    this.isResponseReceived = true;
+    await new Promise(resolve =>
+        this.delayTimer = setTimeout(async () => {
+          console.log("delayTimer")
+          await this.handleResult(this.responseData as BetResult);
+          resolve(0);
+        }, this.delayTime * 1000)
+    );
   }
 
   public async handleResult(result: BetResult) {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    this.gameView.stopSpin(false, this.responseData?.combination, [
+    console.log('handleResult Method');
+    // Act for two action, Stopped with click & Stopped with  itself
+    this.gameView.stopSpin(this.delayTimer === null, this.responseData?.combination, [
       this.responseData?.winningLines || [],
     ]);
-    this.isResponseReceived = true;
     if (result.isWin) {
-      this.ui.showWinPopUp(result.totalWinningAmount, result.coinId);
+      setTimeout(() => {
+        this.ui.showWinPopUp(result.totalWinningAmount, result.coinId);
+        this.audioManager.playSound("win");
+      }, 500)
     }
     this.isResponseReceived = false;
     await this.getPlayerBalance();

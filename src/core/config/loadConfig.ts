@@ -13,10 +13,12 @@ type AssetsType = ReplaceAssetTypeWithString<LoadConfigType>;
 
 export type LoadConfigType = {
   music: {
-    background: AssetType;
+    theme: AssetType;
     reelDrop: AssetType;
     drySpin: AssetType;
+    stopSpin: AssetType;
     uiOtherButtons: AssetType;
+    win: AssetType;
   };
   video: {
     background: AssetType;

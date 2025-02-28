@@ -231,11 +231,15 @@ export class HtmlUI implements IUI {
   public showNotification(headline: string, description: string): void {
     this.elements.notificationSection!.innerHTML = `
         <img src="/assets/images/alert-circle.png" alt="Error Image">
-    <div class="notification-text-container">
-        <p>${headline}</p>
-        <span>${description}</span>
-    </div>`;
+        <div class="notification-text-container">
+            <p>${headline}</p>
+            <span>${description}</span>
+        </div>`;
     
+    this.elements.notificationSection!.classList.toggle("hidden");
+  }
+
+  public hideNotification(): void {
     this.elements.notificationSection!.classList.toggle("hidden");
   }
 

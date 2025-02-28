@@ -2,6 +2,7 @@ import { eventBus } from "./helper/events.ts";
 import { EventEmitter } from "events";
 import { GameView } from "../game/GameView.ts";
 import { AudioManager } from "./AudioManager.ts";
+import {GameInitData} from "../../api/endpoints/initialDataEndpoint.ts";
 
 interface Balance {
   id: number;
@@ -36,12 +37,15 @@ export interface IBetOption {
 export abstract class BaseGameManager implements IBaseGameManager {
   public balance!: Balance;
   protected isResponseReceived: boolean = false;
-  protected initialData1: any = {};
+  protected initialData!: GameInitData;
   protected selectedBetOption!: IBetOption;
   protected gameView!: GameView;
   protected audioManager!: AudioManager;
   protected eventEmitter: EventEmitter = eventBus;
   protected isReadyToStart: boolean = true;
+  protected delayTimer: number | null = null;
+  protected delayTime: number = 2;
+  protected counterForReelDrop: number = 1; // დროებით
 
   public setGetSelectedBetOption(selectedBetOption: any): void {
     this.selectedBetOption = selectedBetOption;
@@ -54,21 +58,6 @@ export abstract class BaseGameManager implements IBaseGameManager {
   public setBalance(balance: Balance): void {
     this.balance = balance;
   }
-
-  // protected handleApiResponse<T extends object>(
-  //     response: T | { error: string },
-  //     onError?: (message: string) => void
-  // ): T | null {
-  //     if (typeof response === "object" && "error" in response) {
-  //         if (onError) {
-  //             onError(response.error);
-  //         } else {
-  //             console.error("API Error:", response.error);
-  //         }
-  //         return null; // Stop execution by returning null
-  //     }
-  //     return response as T; // Return valid data
-  // }
 
   abstract startPlay(): void;
 

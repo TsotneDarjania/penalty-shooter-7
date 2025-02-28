@@ -14,5 +14,6 @@ export interface IUI {
     showWinPopUp(amount: number, coinId: string): void;
     hideWinPopUp(): void;
     showUI(): void;
+    hideNotification(): void;
     showNotification(headline: string, description: string): void;
 }

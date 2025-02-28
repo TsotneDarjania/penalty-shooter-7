@@ -14,10 +14,10 @@ export class AudioManager {
     private initializeAudio(audioList: Record<string, string>): void {
         for (const key in audioList) {
             if (audioList.hasOwnProperty(key)) {
-                const sound = new Howl({ src: [audioList[key]], loop: key === "background" || key === "drySpin" });
+                const sound = new Howl({ src: [audioList[key]], loop: key === "theme" || key === "drySpin" });
                 this.audioMap.set(key, sound); // Store by name
 
-                if (key === "background") {
+                if (key === "theme") {
                     this.backgroundMusic = sound;
                 }
             }
@@ -63,7 +63,6 @@ export class AudioManager {
         }
     }
 
-    /** Gradually decrease background music volume */
     public stopBackgroundMusic(): void {
         if (!this.isMuted) {
             this.isMuted = true;
@@ -72,6 +71,6 @@ export class AudioManager {
     }
 
     public get isBackgroundPlaying(): boolean {
-        return (this.backgroundMusic?.volume() === 1);
+        return (this.backgroundMusic?.volume() === 1 && this.startedAudio);
     }
 }

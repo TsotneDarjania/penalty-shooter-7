@@ -6,11 +6,15 @@ import {
 
 export const assets: LoadConfigType = {
   music: {
-    background: {
-      src: "/assets/musics/greecetheme.mp3",
+    theme: {
+      src: "/assets/musics/theme.mp3",
       data: {
         loop: true,
       },
+    },
+    stopSpin: {
+      src: "/assets/musics/stopSpin.wav",
+      data: {}
     },
     drySpin: {
       src: "/assets/musics/dryspin.wav",
@@ -23,6 +27,10 @@ export const assets: LoadConfigType = {
     uiOtherButtons: {
       src: "/assets/musics/UI/buttons.wav",
       data: {},
+    },
+    win: {
+      src: "/assets/musics/win.wav",
+      data: {}
     },
   },
   video: {
