@@ -44,7 +44,9 @@ export class SlotGameManager extends BaseGameManager {
         });
         this.eventEmitter.on("spin-button-click", () => this.startPlay())
         this.eventEmitter.on("send-bet-option", (betOption) => this.setGetSelectedBetOption(betOption));
-        this.eventEmitter.on("toggle-sound", () => this.handleSoundButton());
+        this.eventEmitter.on("toggle-sound", () => {
+            this.handleSoundButton()
+        });
     }
 
     public static async createInstance(options: ISlotGameManagerInstance): Promise<SlotGameManager> {
@@ -87,6 +89,7 @@ export class SlotGameManager extends BaseGameManager {
 
         // DRAW UI
         this.ui.setEventEmitter(this.eventEmitter);
+        this.registerListeners();
         this.ui.showUI();
         this.ui.setBalance(this.balance.amount);
         this.ui.setBetOptions(this.initialData.betPrices);
@@ -95,8 +98,6 @@ export class SlotGameManager extends BaseGameManager {
             this.ui.updateSpinButton(SpinButtonState.DISABLED);
             return;
         }
-
-        this.registerListeners();
     }
 
     //@ts-ignore

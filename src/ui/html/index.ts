@@ -136,9 +136,7 @@ export class HtmlUI implements IUI {
     }
 
     public async toggleSound(): Promise<void> {
-        if (this.eventEmitter) {
-            this.eventEmitter.emit("toggle-sound");
-        }
+        this.eventEmitter.emit("toggle-sound");
     }
 
     private toggleNavSection(): void {
