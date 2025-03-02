@@ -1,7 +1,7 @@
 import html from "./index.html?raw";
-import { IUI } from "./interfaces/UI.ts";
-import { SpinButtonState } from "./enums";
-import { EventEmitter } from "events";
+import {IUI} from "./interfaces/UI.ts";
+import {SpinButtonState} from "./enums";
+import {EventEmitter} from "events";
 
 export class HtmlUI implements IUI {
   private static instance: HtmlUI;
@@ -25,11 +25,11 @@ export class HtmlUI implements IUI {
     notificationSection: null as HTMLElement | null,
   };
 
-  private state = {
+  public state = {
     betOptionsData: [] as any[],
     selectedBetOption: { betPriceId: 0, coin: "", multiplier: 0 },
-    platButtonColor: "grey",
-    playSectionBackgroundColor: "grey",
+    platButtonColor: "rgba(102,13,197,0.53)",
+    playSectionBackgroundColor: "rgba(102,13,197,0.53)",
   };
 
   constructor() {}
@@ -95,6 +95,13 @@ export class HtmlUI implements IUI {
     this.elements.playerPanelContainer = uiContainer.querySelector(
       "#game-panel-container"
     );
+
+    document.getElementById("spin-button")!.style.background =
+        this.state.platButtonColor;
+    document.getElementById("game-panel-container-masked")!.style.background =
+        this.state.playSectionBackgroundColor;
+    document.getElementById("bet-options")!.style.background =
+        this.state.playSectionBackgroundColor;
 
     this.elements.playerPanelContainer!.style.display = "none";
 
@@ -235,7 +242,7 @@ export class HtmlUI implements IUI {
             <p>${headline}</p>
             <span>${description}</span>
         </div>`;
-    
+
     this.elements.notificationSection!.classList.toggle("hidden");
   }
 

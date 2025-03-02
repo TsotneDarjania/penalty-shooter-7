@@ -14,6 +14,8 @@ interface Balance {
 export interface IBaseGameManager {
   balance: Balance;
 
+  stopwatch: number;
+
   getBalance(): Balance;
 
   setBalance(balance: Balance): void;
@@ -36,6 +38,7 @@ export interface IBetOption {
 
 export abstract class BaseGameManager implements IBaseGameManager {
   public balance!: Balance;
+  public stopwatch: number = 0;
   protected isResponseReceived: boolean = false;
   protected initialData!: GameInitData;
   protected selectedBetOption!: IBetOption;
@@ -44,7 +47,8 @@ export abstract class BaseGameManager implements IBaseGameManager {
   protected eventEmitter: EventEmitter = eventBus;
   protected isReadyToStart: boolean = true;
   protected delayTimer: number | null = null;
-  protected delayTime: number = 2;
+  protected delayTime: number = 3;
+  protected playerOrderedStop: boolean = false;
   protected counterForReelDrop: number = 1; // დროებით
 
   public setGetSelectedBetOption(selectedBetOption: any): void {

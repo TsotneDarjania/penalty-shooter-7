@@ -4,7 +4,7 @@ export class AudioManager {
     private static instance: AudioManager;
     private audioMap: Map<string, Howl> = new Map();
     private backgroundMusic?: Howl;
-    private isMuted: boolean = false;
+    private isMuted: boolean = true;
     private startedAudio: boolean = false;
 
     private constructor(audioList: Record<string, string>) {
@@ -51,9 +51,12 @@ export class AudioManager {
         this.audioMap.forEach(sound => sound.mute(this.isMuted));
     }
 
+    // რეგისტრირებული საუნდები არ ირთვება როცა toggle ხდება ხმების
+    // მაგალითად რილი სპინ პროცესშია და sound on, მხოლოდ theme ირთვება
     public playBackgroundMusic(): void {
         if(!this.startedAudio){
             this.startedAudio = true;
+            this.isMuted = false;
             this.backgroundMusic!.play();
         }
 

@@ -16,6 +16,10 @@ export const assets: LoadConfigType = {
       src: "/assets/musics/stopSpin.wav",
       data: {}
     },
+    spin: {
+      src: "/assets/musics/UI/spin.wav",
+      data: {}
+    },
     drySpin: {
       src: "/assets/musics/dryspin.wav",
       data: {},

@@ -19,6 +19,7 @@ export type LoadConfigType = {
     stopSpin: AssetType;
     uiOtherButtons: AssetType;
     win: AssetType;
+    spin: AssetType;
   };
   video: {
     background: AssetType;
