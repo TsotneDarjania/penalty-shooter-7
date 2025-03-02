@@ -34,8 +34,9 @@ export class AudioManager {
 
     public playSound(name: string): void {
         const sound = this.audioMap.get(name);
-        if (sound && !this.isMuted) {
+        if (sound) {
             sound.play();
+            sound.volume(this.isMuted ? 0 : 1);
         }
     }
 
@@ -47,17 +48,17 @@ export class AudioManager {
     }
 
     public toggleMute(): void {
-        this.isMuted = !this.isMuted;
-        this.audioMap.forEach(sound => sound.mute(this.isMuted));
+        this.audioMap.forEach(sound => {
+            sound.volume(this.isMuted ? 0 : 1);
+        });
     }
 
-    // რეგისტრირებული საუნდები არ ირთვება როცა toggle ხდება ხმების
-    // მაგალითად რილი სპინ პროცესშია და sound on, მხოლოდ theme ირთვება
     public playBackgroundMusic(): void {
         if(!this.startedAudio){
             this.startedAudio = true;
             this.isMuted = false;
             this.backgroundMusic!.play();
+            this.toggleMute();
         }
 
         if (this.isMuted) {
@@ -70,6 +71,7 @@ export class AudioManager {
         if (!this.isMuted) {
             this.isMuted = true;
             this.backgroundMusic!.volume(0);
+            this.toggleMute();
         }
     }
 
