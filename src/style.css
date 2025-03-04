@@ -84,11 +84,11 @@ body {
   }
 }
 
-#app {
-  position: absolute;
-  margin-top: auto;
-  margin-bottom: auto;
-  top: 0;
-  bottom: 0;
-  height: min-content;
-}
+/*#app {*/
+/*  position: absolute;*/
+/*  margin-top: auto;*/
+/*  margin-bottom: auto;*/
+/*  top: 0;*/
+/*  bottom: 0;*/
+/*  height: min-content;*/
+/*}*/
