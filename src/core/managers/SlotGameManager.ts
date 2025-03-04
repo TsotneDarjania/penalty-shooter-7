@@ -203,26 +203,26 @@ export class SlotGameManager extends BaseGameManager {
 
         this.startStopwatch();
 
-        let tempTimeout: any;
-
-        const waitPromise = new Promise(resolve => {
-            tempTimeout = setTimeout(() => {
-                resolve("Completed after 7s");
-            }, 7000);
-        });
-
-        const randomStopPromise = new Promise(resolve => {
-            const randomTime = Math.random() * 2000 + 4000; // Random time between n1 n2
-            setTimeout(() => {
-                clearTimeout(tempTimeout); // Stop the 7s fake timer
-                tempTimeout = null;
-                resolve(`Stopped early at ${randomTime.toFixed(0)}ms`);
-            }, randomTime);
-        });
-
-        tempTimeout = await Promise.race([waitPromise, randomStopPromise]);
-
-        console.log(tempTimeout);
+        // let tempTimeout: any;
+        //
+        // const waitPromise = new Promise(resolve => {
+        //     tempTimeout = setTimeout(() => {
+        //         resolve("Completed after 7s");
+        //     }, 7000);
+        // });
+        //
+        // const randomStopPromise = new Promise(resolve => {
+        //     const randomTime = Math.random() * 2000 + 4000; // Random time between n1 n2
+        //     setTimeout(() => {
+        //         clearTimeout(tempTimeout); // Stop the 7s fake timer
+        //         tempTimeout = null;
+        //         resolve(`Stopped early at ${randomTime.toFixed(0)}ms`);
+        //     }, randomTime);
+        // });
+        //
+        // tempTimeout = await Promise.race([waitPromise, randomStopPromise]);
+        //
+        // console.log(tempTimeout);
 
         this.responseData = await Api.call(
             BetEndpoint,
