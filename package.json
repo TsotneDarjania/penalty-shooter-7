@@ -17,6 +17,7 @@
   "dependencies": {
     "@esotericsoftware/spine-pixi-v8": "^4.2.74",
     "@pixi/devtools": "^2.0.1",
+    "@types/node": "^22.13.9",
     "cors": "^2.8.5",
     "events": "^3.3.0",
     "express": "^4.21.2",

@@ -242,6 +242,7 @@ export class SlotGameManager extends BaseGameManager {
 
 
         await new Promise(resolve =>
+            // @ts-ignore
             this.delayTimer = setTimeout(async () => {
                 if (this.playerOrderedStop) {
                     return
