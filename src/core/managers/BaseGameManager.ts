@@ -3,18 +3,10 @@ import { EventEmitter } from "events";
 import { GameView } from "../game/GameView.ts";
 import { AudioManager } from "./AudioManager.ts";
 import {GameInitData} from "../../api/endpoints/initialDataEndpoint.ts";
-
-interface Balance {
-  id: number;
-  amount: number;
-  coin: string;
-  promotionId: number;
-}
+import {Balance} from "./interfaces";
 
 export interface IBaseGameManager {
   balance: Balance;
-
-  stopwatch: number;
 
   getBalance(): Balance;
 
@@ -38,8 +30,7 @@ export interface IBetOption {
 
 export abstract class BaseGameManager implements IBaseGameManager {
   public balance!: Balance;
-  public stopwatch: number = 0;
-  protected isResponseReceived: boolean = false;
+  protected isResponseReceived: boolean = false; // optional
   protected initialData!: GameInitData;
   protected selectedBetOption!: IBetOption;
   protected gameView!: GameView;

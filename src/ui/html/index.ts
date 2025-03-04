@@ -1,6 +1,6 @@
 import html from "./index.html?raw";
 import {IUI} from "./interfaces/UI.ts";
-import {SpinButtonState} from "./enums";
+import {IBetOption, SpinButtonState, UIEvents} from "./enums";
 import {EventEmitter} from "events";
 
 export class HtmlUI implements IUI {
@@ -26,7 +26,7 @@ export class HtmlUI implements IUI {
     };
 
     public state = {
-        betOptionsData: [] as any[],
+        betOptionsData: [] as IBetOption[],
         selectedBetOption: {betPriceId: 0, coin: "", multiplier: 0},
         platButtonColor: "rgba(102,13,197,0.53)",
         playSectionBackgroundColor: "rgba(102,13,197,0.53)",
@@ -66,46 +66,11 @@ export class HtmlUI implements IUI {
         }
     }
 
-    public initialize(uiContainer: HTMLElement): void {
-        this.elements.container = uiContainer;
+    private renderHTML(): void {
+        this.elements.container!.innerHTML = html;
+    }
 
-        this.elements.container.innerHTML = html;
-
-        this.elements.soundButton = uiContainer.querySelector(
-            "#sound-section button"
-        );
-        this.elements.soundButtonImg =
-            this.elements.soundButton?.querySelector("img") || null;
-        this.elements.navSection = uiContainer.querySelector("#nav-section");
-        this.elements.spinButton = uiContainer.querySelector("#spin-button");
-        this.elements.balanceSection =
-            uiContainer.querySelector("#balance-section");
-        this.elements.balanceAmount =
-            this.elements.balanceSection?.querySelector("span") || null;
-        this.elements.betSection = uiContainer.querySelector("#bet-section");
-        this.elements.betOptions = uiContainer.querySelector("#bet-options");
-        this.elements.selectedBetOption =
-            this.elements.betSection?.querySelector("span") || null;
-        this.elements.winPopUp = uiContainer.querySelector("#win-popup-container");
-        this.elements.navContainer = uiContainer.querySelector("#nav-container");
-        this.elements.winPopUpText =
-            uiContainer.querySelector("#win-popup-text") || null;
-        this.elements.notificationSection = uiContainer.querySelector(
-            "#notification-section"
-        );
-        this.elements.playerPanelContainer = uiContainer.querySelector(
-            "#game-panel-container"
-        );
-
-        document.getElementById("spin-button")!.style.background =
-            this.state.platButtonColor;
-        document.getElementById("game-panel-container-masked")!.style.background =
-            this.state.playSectionBackgroundColor;
-        document.getElementById("bet-options")!.style.background =
-            this.state.playSectionBackgroundColor;
-
-        this.elements.playerPanelContainer!.style.display = "none";
-
+    private bindEvents(): void {
         if (this.elements.soundButton) {
             this.elements.soundButton.addEventListener("click", () =>
                 this.toggleSound()
@@ -117,8 +82,10 @@ export class HtmlUI implements IUI {
             );
         }
         if (this.elements.spinButton) {
-            this.elements.spinButton.addEventListener("click", () =>
-                this.spinButtonClickHandler()
+            this.elements.spinButton.addEventListener("click", () => {
+                    console.log("clicked")
+                    this.spinButtonClickHandler()
+                }
             );
         }
         if (this.elements.betSection) {
@@ -129,6 +96,57 @@ export class HtmlUI implements IUI {
 
         document.addEventListener('keydown', this.handleSpaceBar.bind(this));
         document.addEventListener('keydown', this.handleSoundKey.bind(this));
+    }
+
+    private cacheElements(): void {
+        this.elements.soundButton = this.elements.container!.querySelector(
+            "#sound-section button"
+        );
+        this.elements.soundButtonImg =
+            this.elements.soundButton?.querySelector("img") || null;
+        this.elements.navSection = this.elements.container!.querySelector("#nav-section");
+        this.elements.spinButton = this.elements.container!.querySelector("#spin-button");
+        this.elements.balanceSection =
+            this.elements.container!.querySelector("#balance-section");
+        this.elements.balanceAmount =
+            this.elements.balanceSection?.querySelector("span") || null;
+        this.elements.betSection = this.elements.container!.querySelector("#bet-section");
+        this.elements.betOptions = this.elements.container!.querySelector("#bet-options");
+        this.elements.selectedBetOption =
+            this.elements.betSection?.querySelector("span") || null;
+        this.elements.winPopUp = this.elements.container!.querySelector("#win-popup-container");
+        this.elements.navContainer = this.elements.container!.querySelector("#nav-container");
+        this.elements.winPopUpText =
+            this.elements.container!.querySelector("#win-popup-text") || null;
+        this.elements.notificationSection = this.elements.container!.querySelector(
+            "#notification-section"
+        );
+        this.elements.playerPanelContainer = this.elements.container!.querySelector(
+            "#game-panel-container"
+        );
+    }
+
+    private setupInitialStyles(): void {
+        document.getElementById("spin-button")!.style.background =
+            this.state.platButtonColor;
+        document.getElementById("game-panel-container-masked")!.style.background =
+            this.state.playSectionBackgroundColor;
+        document.getElementById("bet-options")!.style.background =
+            this.state.playSectionBackgroundColor;
+
+        this.elements.playerPanelContainer!.style.display = "none";
+    }
+
+    public initialize(uiContainer: HTMLElement): void {
+        this.elements.container = uiContainer;
+
+        this.renderHTML();
+
+        this.cacheElements();
+
+        this.setupInitialStyles();
+
+        this.bindEvents();
     }
 
     private handleSpaceBar(event: any): void {
@@ -169,7 +187,7 @@ export class HtmlUI implements IUI {
     private toggleBetOptions(): void {
         if (this.elements.betOptions) {
             this.elements.betOptions.classList.toggle("hidden");
-            this.eventEmitter.emit("toggle-bet-section");
+            this.eventEmitter.emit(UIEvents.TOGGLE_BET_SECTION);
         }
     }
 
@@ -184,7 +202,7 @@ export class HtmlUI implements IUI {
     private toggleNavSection(): void {
         // @ts-ignore
         this.elements.navContainer.classList.toggle("hidden");
-        this.eventEmitter.emit("toggle-nav-section");
+        this.eventEmitter.emit(UIEvents.TOGGLE_NAV_SECTION);
     }
 
     public setBalance(newBalance: number): void {
@@ -201,17 +219,17 @@ export class HtmlUI implements IUI {
     }
 
     private emitBetOption(): void {
-        this.eventEmitter.emit("send-bet-option", this.state.selectedBetOption);
+        this.eventEmitter.emit(UIEvents.SEND_BET_OPTION, this.state.selectedBetOption);
     }
 
-    public setBetOptions(betOptionsList: any[]): void {
+    public setBetOptions(betOptionsList: IBetOption[]): void {
         this.state.betOptionsData = betOptionsList;
         this.elements.selectedBetOption.innerHTML = `BET ${betOptionsList[0].multiplier}X`;
         this.setBetOption(betOptionsList[0]);
         this.renderBetOptions();
     }
 
-    private setBetOption(betOption: any): void {
+    private setBetOption(betOption: IBetOption): void {
         this.state.selectedBetOption = betOption;
     }
 
@@ -276,10 +294,11 @@ export class HtmlUI implements IUI {
     }
 
     private spinButtonClickHandler() {
-        this.eventEmitter.emit("spin-button-click");
+        console.log('spinButtonClickHandler')
+        this.eventEmitter.emit(UIEvents.SPIN_BUTTON_CLICK);
     }
 
     public toggleSound(): void {
-        this.eventEmitter.emit("toggle-sound");
+        this.eventEmitter.emit(UIEvents.TOGGLE_SOUND);
     }
 }

@@ -331,6 +331,7 @@ export class Board extends Container {
     this.line_2_1_0.state.setAnimation(0, "Hide", false);
 
     this.reels.forEach((reel) => {
+      reel.spinManager.isLastSpin = false
       reel.startSpin();
     });
   }
@@ -343,8 +344,7 @@ export class Board extends Container {
     } = {
       lines: [[]],
     }
-  ) {
-    if (winnings) {
+  ) {if (winnings) {
       this.winnings = winnings;
     }
 

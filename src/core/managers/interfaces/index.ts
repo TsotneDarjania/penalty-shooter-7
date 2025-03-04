@@ -8,3 +8,10 @@ export enum SpinButtonState {
     SPINNING = "spinning",
     DISABLED = "disabled",
 }
+
+export interface Balance {
+    id: number;
+    amount: number;
+    coin: string;
+    promotionId: number;
+}

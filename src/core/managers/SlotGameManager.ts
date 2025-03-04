@@ -11,7 +11,7 @@ import {PlayerBalanceEndpoint} from "../../api/endpoints/playerBalanceEndpoint.t
 import {BetEndpoint, BetResult} from "../../api/endpoints/betEndpoint.ts";
 import {AudioManager} from "./AudioManager.ts";
 import {ISlotGameManagerInstance, SpinButtonState} from "./interfaces";
-
+import {UIEvents} from "../../ui/html/enums";
 
 export class SlotGameManager extends BaseGameManager {
     private static instance: SlotGameManager;
@@ -20,6 +20,7 @@ export class SlotGameManager extends BaseGameManager {
     private responseData?: BetResult = undefined;
     private playButtonState: SpinButtonState = SpinButtonState.IDLE;
     private tempInterval: any = null;
+    private stopwatch: number = 0;
     private delayTimer: number | null = null;
     private delayTime: number = 3;
     private playerOrderedStop: boolean = false;
@@ -31,11 +32,10 @@ export class SlotGameManager extends BaseGameManager {
 
     private registerListeners(): void {
         this.gameView.board.eventEmitter.on("reset", () => {
-            // this.isReadyToStart = true;
             this.setState(SpinButtonState.IDLE);
             this.ui.updateSpinButton(SpinButtonState.IDLE);
         });
-        this.eventEmitter.on("spin-button-click", async () => {
+        this.eventEmitter.on(UIEvents.SPIN_BUTTON_CLICK, async () => {
             this.playButtonState === SpinButtonState.IDLE && this.audioManager.playSound("spin");
             if (this.playButtonState === SpinButtonState.SPINNING && this.isResponseReceived) {
                 this.playerOrderedStop = true;
@@ -43,16 +43,16 @@ export class SlotGameManager extends BaseGameManager {
             if (this.playButtonState === SpinButtonState.SPINNING && !this.isResponseReceived) return;
             await this.startPlay();
         });
-        this.eventEmitter.on("send-bet-option", (betOption) =>
+        this.eventEmitter.on(UIEvents.SEND_BET_OPTION, (betOption) =>
             this.setGetSelectedBetOption(betOption)
         );
-        this.eventEmitter.on("toggle-sound", () => {
+        this.eventEmitter.on(UIEvents.TOGGLE_SOUND, () => {
             this.handleSoundButton();
         });
-        this.eventEmitter.on("toggle-nav-section", () =>
+        this.eventEmitter.on(UIEvents.TOGGLE_NAV_SECTION, () =>
             this.audioManager.playSound("uiOtherButtons")
         );
-        this.eventEmitter.on("toggle-bet-section", () =>
+        this.eventEmitter.on(UIEvents.TOGGLE_BET_SECTION, () =>
             this.audioManager.playSound("uiOtherButtons")
         );
         this.gameView.board.eventEmitter.on("reelFinishedSpin", () => {
@@ -87,25 +87,19 @@ export class SlotGameManager extends BaseGameManager {
         this.ui = HtmlUI.getInstance();
         this.ui.initialize(UIContainer);
 
-        // //@ts-ignore
-        // if (initialData.error || initialData!.data.Succeeded === false) {
-        //   //this.ui.showNotification(initialData.error, "dada");
-        //   return;
-        //   //@ts-ignore
-        // }
+        const data = await this.getPlayerBalance();
 
-        const balanceData = await this.getPlayerBalance();
-
-        this.setBalance(balanceData.balance);
+        this.setBalance(data.balance);
 
         // Wait for assets to load (Game assets)
         await this.gameView.startLoadingAssets();
-        this.gameView.hideLoadingScreen();
-        this.gameView.showGame();
         this.audioManager = AudioManager.createInstance(GameAssets.music);
 
         this.initialData = await this.getInitialData();
+        console.log(this.initialData);
         this.selectedBetOption = this.initialData!.betPrices[0];
+
+        this.gameView.showGame();
 
         // DRAW UI
         this.ui.setEventEmitter(this.eventEmitter);
@@ -113,10 +107,12 @@ export class SlotGameManager extends BaseGameManager {
         this.ui.showUI();
         this.ui.setBalance(this.balance.amount);
         this.ui.setBetOptions(this.initialData.betPrices);
+
+        this.gameView.hideLoadingScreen();
     }
 
     //@ts-ignore
-    private getState(): string {
+    public getState(): string {
         return this.state;
     }
 
@@ -207,26 +203,26 @@ export class SlotGameManager extends BaseGameManager {
 
         this.startStopwatch();
 
-        // let tempTimeout: any;
-        //
-        // const waitPromise = new Promise(resolve => {
-        //     tempTimeout = setTimeout(() => {
-        //         resolve("Completed after 7s");
-        //     }, 7000);
-        // });
-        //
-        // const randomStopPromise = new Promise(resolve => {
-        //     const randomTime = Math.random() * 2000 + 4000; // Random time between n1 n2
-        //     setTimeout(() => {
-        //         clearTimeout(tempTimeout); // Stop the 7s fake timer
-        //         tempTimeout = null;
-        //         resolve(`Stopped early at ${randomTime.toFixed(0)}ms`);
-        //     }, randomTime);
-        // });
-        //
-        // tempTimeout = await Promise.race([waitPromise, randomStopPromise]);
-        //
-        // console.log(tempTimeout);
+        let tempTimeout: any;
+
+        const waitPromise = new Promise(resolve => {
+            tempTimeout = setTimeout(() => {
+                resolve("Completed after 7s");
+            }, 7000);
+        });
+
+        const randomStopPromise = new Promise(resolve => {
+            const randomTime = Math.random() * 2000 + 4000; // Random time between n1 n2
+            setTimeout(() => {
+                clearTimeout(tempTimeout); // Stop the 7s fake timer
+                tempTimeout = null;
+                resolve(`Stopped early at ${randomTime.toFixed(0)}ms`);
+            }, randomTime);
+        });
+
+        tempTimeout = await Promise.race([waitPromise, randomStopPromise]);
+
+        console.log(tempTimeout);
 
         this.responseData = await Api.call(
             BetEndpoint,
@@ -237,11 +233,13 @@ export class SlotGameManager extends BaseGameManager {
 
         let _delayTime = this.delayTime;
 
+
         if (_delayTime <= this.stopwatch) {
             _delayTime = 0;
         } else if (this.delayTime >= this.stopwatch) {
             _delayTime = this.delayTime - this.stopwatch;
         }
+
 
         await new Promise(resolve =>
             this.delayTimer = setTimeout(async () => {
@@ -274,13 +272,13 @@ export class SlotGameManager extends BaseGameManager {
         this.isResponseReceived = false;
         this.responseData = undefined;
         setTimeout(() => this.playButtonState = SpinButtonState.IDLE, 400);
-        await this.getPlayerBalance();
-        this.ui.setBalance(this.balance.amount);
+        const data = await this.getPlayerBalance();
+        this.setBalance(data.balance);
+        this.ui.setBalance(data.balance.amount);
     }
 
     setState(newState: SpinButtonState): void {
         this.state = newState;
-        // eventBus.emit(SlotEventKey.STATE_CHANGE, this.state);
     }
 
     public async getPlayerBalance(): Promise<any> {

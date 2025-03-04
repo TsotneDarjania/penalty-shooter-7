@@ -11,7 +11,7 @@ export class SpinManager {
 
   private isSkipSpin = false;
 
-  private isLastSpin = false;
+  isLastSpin = false;
   private resultCombination: number[] = [];
 
   downMotionDistance = 0;

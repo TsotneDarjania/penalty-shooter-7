@@ -1,8 +1,5 @@
 import { SlotGameManager } from "./core/managers/SlotGameManager.ts";
 import { setupEndpoints } from "./api/endpoints";
-import * as mocks from "./mock.ts";
-
-mocks.mockServer();
 
 (async () => {
   setupEndpoints();

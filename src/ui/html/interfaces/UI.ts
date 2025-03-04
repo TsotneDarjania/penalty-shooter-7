@@ -8,6 +8,7 @@ export interface IUI {
     setBalance(balance: number): void;
     setBetOptions(betOptionsList: any[]): void;
     setPlaySectionColors(playButtonColor: string, playSectionBackgroundColor: string): void;
+    setWinPopUpColors(backgroundColor: string): void;
     setEventEmitter(eventBus: EventEmitter): void;
     updateSoundButtonImage(isPlaying: boolean): void;
     updateSpinButton(state: SpinButtonState): void;

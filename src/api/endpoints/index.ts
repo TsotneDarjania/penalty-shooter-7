@@ -9,5 +9,5 @@ export function setupEndpoints() {
     Api.globalBaseUrl = "http://192.168.88.138:5012";
 
     Api.setHeader("Authorization", `Bearer ${token}`);
-    Api.setCommonQueryparams("promotionId", promotionId);
+    Api.setCommonQueryParams("promotionId", promotionId);
 }
