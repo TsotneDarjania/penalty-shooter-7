@@ -9,6 +9,7 @@
   text-decoration: none;
   box-shadow: none;
   outline: none;
+  -webkit-tap-highlight-color: transparent !important;
 }
 
 p {

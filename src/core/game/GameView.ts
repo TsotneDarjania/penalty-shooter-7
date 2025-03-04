@@ -1,7 +1,7 @@
 import {
   Application as PixiApplication,
   Assets,
-  ContainerChild,
+  ContainerChild, isMobile,
   Sprite,
   Texture,
 } from "pixi.js";
@@ -128,11 +128,12 @@ export class GameView extends PixiApplication {
     this.height = 1920;
 
     await this.init({
-      width: this.width, // Fixed internal width
-      height: this.height, // Adapt to container height
+      width: this.width,
+      height: this.height,
       background: "rgba(255,255,255,0)",
       antialias: true,
-      resolution: window.devicePixelRatio || 1,
+      preference: 'webgpu',
+      resolution: isMobile.any ? 0.5 : window.devicePixelRatio,
     });
 
     devTools && (await initDevtools(this));
