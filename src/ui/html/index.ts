@@ -128,11 +128,19 @@ export class HtmlUI implements IUI {
         }
 
         document.addEventListener('keydown', this.handleSpaceBar.bind(this));
+        document.addEventListener('keydown', this.handleSoundKey.bind(this));
     }
 
     private handleSpaceBar(event: any): void {
         if(event.code == "Space"){
             this.spinButtonClickHandler();
+            event.preventDefault();
+        }
+    }
+
+    private handleSoundKey(event: any): void {
+        if(event.code == "KeyM"){
+            this.toggleSound();
             event.preventDefault();
         }
     }
@@ -171,10 +179,6 @@ export class HtmlUI implements IUI {
                 ? "/assets/sound-button-on.png"
                 : "/assets/sound-button-off.png";
         }
-    }
-
-    public async toggleSound(): Promise<void> {
-        this.eventEmitter.emit("toggle-sound");
     }
 
     private toggleNavSection(): void {
@@ -273,5 +277,9 @@ export class HtmlUI implements IUI {
 
     private spinButtonClickHandler() {
         this.eventEmitter.emit("spin-button-click");
+    }
+
+    public toggleSound(): void {
+        this.eventEmitter.emit("toggle-sound");
     }
 }

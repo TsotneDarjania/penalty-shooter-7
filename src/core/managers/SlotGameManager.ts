@@ -10,17 +10,8 @@ import {HtmlUI} from "../../ui/html"; // UI PACKAGE
 import {PlayerBalanceEndpoint} from "../../api/endpoints/playerBalanceEndpoint.ts";
 import {BetEndpoint, BetResult} from "../../api/endpoints/betEndpoint.ts";
 import {AudioManager} from "./AudioManager.ts";
+import {ISlotGameManagerInstance, SpinButtonState} from "./interfaces";
 
-interface ISlotGameManagerInstance {
-    gameContainer: HTMLElement;
-    uiContainer: HTMLElement;
-}
-
-enum SpinButtonState {
-    IDLE = "idle",
-    SPINNING = "spinning",
-    DISABLED = "disabled",
-}
 
 export class SlotGameManager extends BaseGameManager {
     private static instance: SlotGameManager;
@@ -29,6 +20,10 @@ export class SlotGameManager extends BaseGameManager {
     private responseData?: BetResult = undefined;
     private playButtonState: SpinButtonState = SpinButtonState.IDLE;
     private tempInterval: any = null;
+    private delayTimer: number | null = null;
+    private delayTime: number = 3;
+    private playerOrderedStop: boolean = false;
+    private counterForReelDrop: number = 1;
 
     private constructor() {
         super();
@@ -36,7 +31,7 @@ export class SlotGameManager extends BaseGameManager {
 
     private registerListeners(): void {
         this.gameView.board.eventEmitter.on("reset", () => {
-            this.isReadyToStart = true;
+            // this.isReadyToStart = true;
             this.setState(SpinButtonState.IDLE);
             this.ui.updateSpinButton(SpinButtonState.IDLE);
         });
@@ -45,7 +40,7 @@ export class SlotGameManager extends BaseGameManager {
             if (this.playButtonState === SpinButtonState.SPINNING && this.isResponseReceived) {
                 this.playerOrderedStop = true;
             }
-            if(this.playButtonState === SpinButtonState.SPINNING && !this.isResponseReceived) return
+            if (this.playButtonState === SpinButtonState.SPINNING && !this.isResponseReceived) return;
             await this.startPlay();
         });
         this.eventEmitter.on("send-bet-option", (betOption) =>
@@ -198,19 +193,17 @@ export class SlotGameManager extends BaseGameManager {
             return;
         }
 
-        // if (this.playButtonState === SpinButtonState.IDLE) {
-            this.ui.hideWinPopUp();
-            this.setState(SpinButtonState.SPINNING);
-            this.ui.updateSpinButton(SpinButtonState.SPINNING);
-            this.gameView.startSpin();
-            this.playButtonState = SpinButtonState.SPINNING;
-            setTimeout(() => this.audioManager.playSound("drySpin"), 250)
-            this.setBalance({
-                ...this.balance,
-                amount: this.balance.amount - this.selectedBetOption.betAmount,
-            });
-            this.ui.setBalance(this.balance.amount);
-        // }
+        this.ui.hideWinPopUp();
+        this.setState(SpinButtonState.SPINNING);
+        this.ui.updateSpinButton(SpinButtonState.SPINNING);
+        this.gameView.startSpin();
+        this.playButtonState = SpinButtonState.SPINNING;
+        setTimeout(() => this.audioManager.playSound("drySpin"), 250)
+        this.setBalance({
+            ...this.balance,
+            amount: this.balance.amount - this.selectedBetOption.betAmount,
+        });
+        this.ui.setBalance(this.balance.amount);
 
         this.startStopwatch();
 
@@ -245,7 +238,7 @@ export class SlotGameManager extends BaseGameManager {
         let _delayTime = this.delayTime;
 
         if (_delayTime <= this.stopwatch) {
-            _delayTime = 0 // need to work
+            _delayTime = 0;
         } else if (this.delayTime >= this.stopwatch) {
             _delayTime = this.delayTime - this.stopwatch;
         }

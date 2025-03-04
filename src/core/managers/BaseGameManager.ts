@@ -45,11 +45,6 @@ export abstract class BaseGameManager implements IBaseGameManager {
   protected gameView!: GameView;
   protected audioManager!: AudioManager;
   protected eventEmitter: EventEmitter = eventBus;
-  protected isReadyToStart: boolean = true;
-  protected delayTimer: number | null = null;
-  protected delayTime: number = 3;
-  protected playerOrderedStop: boolean = false;
-  protected counterForReelDrop: number = 1; // დროებით
 
   public setGetSelectedBetOption(selectedBetOption: any): void {
     this.selectedBetOption = selectedBetOption;
