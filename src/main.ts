@@ -1,9 +1,7 @@
 import { SlotGameManager } from "./core/managers/SlotGameManager.ts";
 import { setupEndpoints } from "./api/endpoints";
-import {mockServer} from "./mock.ts";
 
 (async () => {
-  mockServer();
   setupEndpoints();
 
   const GameContainer: HTMLElement = document.getElementById(

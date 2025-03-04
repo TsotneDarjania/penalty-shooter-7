@@ -7,7 +7,7 @@ import {
 import {IUI} from "../../ui/html/interfaces/UI.ts"; // UI PACKAGE
 import {GameView} from "../game/GameView.ts";
 import {HtmlUI} from "../../ui/html"; // UI PACKAGE
-import {PlayerBalanceEndpoint} from "../../api/endpoints/playerBalanceEndpoint.ts";
+import {PlayerBalance, PlayerBalanceEndpoint} from "../../api/endpoints/playerBalanceEndpoint.ts";
 import {BetEndpoint, BetResult} from "../../api/endpoints/betEndpoint.ts";
 import {AudioManager} from "./AudioManager.ts";
 import {ISlotGameManagerInstance, SpinButtonState} from "./interfaces";
@@ -96,7 +96,6 @@ export class SlotGameManager extends BaseGameManager {
         this.audioManager = AudioManager.createInstance(GameAssets.music);
 
         this.initialData = await this.getInitialData();
-        console.log(this.initialData);
         this.selectedBetOption = this.initialData!.betPrices[0];
 
         this.gameView.showGame();
@@ -175,6 +174,7 @@ export class SlotGameManager extends BaseGameManager {
             return;
         }
 
+        // ...
         if (this.playButtonState === SpinButtonState.SPINNING && !this.playerOrderedStop && this.isResponseReceived) {
             console.log("Data is not received, waiting ...");
             return;
@@ -282,7 +282,7 @@ export class SlotGameManager extends BaseGameManager {
         this.state = newState;
     }
 
-    public async getPlayerBalance(): Promise<any> {
+    public async getPlayerBalance(): Promise<PlayerBalance> {
         return await Api.call(PlayerBalanceEndpoint);
     }
 

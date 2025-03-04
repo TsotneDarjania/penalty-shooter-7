@@ -14,7 +14,7 @@ export class PlayerBalanceEndpoint extends Endpoint<PlayerBalance, undefined> {
     constructor() {
         super(undefined);
     }
-    baseUrl?: string = "http://192.168.88.138:5002";
+    baseUrl?: string = "https://st-hubapi.onaim.io";
     method: "GET" | "POST" = "GET";
     path: string = `/HubApi/Game/PlayerInCoinBalances`;
 }

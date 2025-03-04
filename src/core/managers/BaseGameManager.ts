@@ -45,6 +45,13 @@ export abstract class BaseGameManager implements IBaseGameManager {
     return this.balance;
   }
 
+  protected handleApiResponse<T extends object>(
+      response: T | { error: string },
+  ): T | null {
+    console.log(response);
+      return response as T; // Return valid data
+  }
+
   public setBalance(balance: Balance): void {
     this.balance = balance;
   }

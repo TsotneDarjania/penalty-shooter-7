@@ -23,13 +23,12 @@ export abstract class Endpoint<
         this.commonQueryParams[key] = value;
     }
 
-    protected constructor(private params: TParams) {
-    }
+    protected constructor(private params: TParams) {}
 
     async call(callBack?: (response: TResponse) => void): Promise<TResponse> {
         let url = (this.baseUrl || Api.globalBaseUrl) + this.path;
 
-        let queryParams = {...this.params?.query, ...Endpoint.commonQueryParams};
+        let queryParams = { ...this.params?.query, ...Endpoint.commonQueryParams };
         if (queryParams) {
             const queryString = Object.entries(queryParams)
                 .map(
@@ -58,7 +57,6 @@ export abstract class Endpoint<
 
 export class Api {
     static globalBaseUrl: string;
-
     static call<
         T extends Endpoint<any, any>,
         Args extends ConstructorParameters<new (...args: any[]) => T>

@@ -6,7 +6,7 @@ export function setupEndpoints() {
     const promotionId = urlParams.get("promotionid") || urlParams.get("promotionId")!;
     const token = urlParams.get("token")!;
 
-    Api.globalBaseUrl = "http://192.168.88.138:5012";
+    Api.globalBaseUrl = "https://st-greekslotapi.onaim.io";
 
     Api.setHeader("Authorization", `Bearer ${token}`);
     Api.setCommonQueryParams("promotionId", promotionId);
