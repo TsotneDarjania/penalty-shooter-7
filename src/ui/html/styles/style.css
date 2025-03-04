@@ -103,8 +103,8 @@ html {
     grid-template-rows: auto auto;
     align-items: center;
     width: 100%;
-    padding: 0.8rem 2rem;
-    gap: 0.5rem;
+    padding: 2% 6%;
+    gap: 1%;
 }
 
 .balance-section {
@@ -165,16 +165,18 @@ html {
 }
 
 .balance-section img {
-    height: clamp(1.5rem, 2.5vw, 2rem);
+    height: 10%;
 }
 
 .bet-options {
-    width: 7.375rem;
+    width: 25%;
+    max-height: 250px;
+    /*min-height: 120px;*/
     height: 70%;
     background: #100C4D4D;
     backdrop-filter: blur(10px);
     position: absolute;
-    top: calc(-10%);
+    top: -10%;
     right: 1.5rem;
     border: 1px solid #FFFFFF33;
     border-radius: 0.75rem;

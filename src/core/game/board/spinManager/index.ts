@@ -60,6 +60,7 @@ export class SpinManager {
       y: this.reel.y - calculatePercentage(25, this.reel.board.displayHeight),
       // ease: "back"
       ease: "back.in",
+      force3D: true,
       onUpdate: () => {
         this.isLastSpin && this.goUpGsapAnimation.progress(1);
       },
@@ -82,6 +83,7 @@ export class SpinManager {
       duration: duration,
       y: targetY,
       ease: style,
+      force3D: true,
       onUpdate: () => {
         this.isLastSpin && this.gsapAnimation.progress(1);
       },

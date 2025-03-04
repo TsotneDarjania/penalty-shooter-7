@@ -22,7 +22,7 @@ export class SlotGameManager extends BaseGameManager {
     private tempInterval: any = null;
     private stopwatch: number = 0;
     private delayTimer: number | null = null;
-    private delayTime: number = 3;
+    private delayTime: number = 2;
     private playerOrderedStop: boolean = false;
     private counterForReelDrop: number = 1;
 
@@ -37,7 +37,7 @@ export class SlotGameManager extends BaseGameManager {
         });
         this.eventEmitter.on(UIEvents.SPIN_BUTTON_CLICK, async () => {
             this.playButtonState === SpinButtonState.IDLE && this.audioManager.playSound("spin");
-            if (this.playButtonState === SpinButtonState.SPINNING && this.isResponseReceived) {
+            if (this.playButtonState === SpinButtonState.SPINNING) {
                 this.playerOrderedStop = true;
             }
             if (this.playButtonState === SpinButtonState.SPINNING && !this.isResponseReceived) return;
