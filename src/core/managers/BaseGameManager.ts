@@ -2,8 +2,8 @@ import { eventBus } from "./helper/events.ts";
 import { EventEmitter } from "events";
 import { GameView } from "../game/GameView.ts";
 import { AudioManager } from "./AudioManager.ts";
-import {GameInitData} from "../../api/endpoints/initialDataEndpoint.ts";
-import {Balance} from "./interfaces";
+import { GameInitData } from "../../api/endpoints/initialDataEndpoint.ts";
+import { Balance } from "./interfaces";
 
 export interface IBaseGameManager {
   balance: Balance;
@@ -46,10 +46,10 @@ export abstract class BaseGameManager implements IBaseGameManager {
   }
 
   protected handleApiResponse<T extends object>(
-      response: T | { error: string },
+    response: T | { error: string }
   ): T | null {
     console.log(response);
-      return response as T; // Return valid data
+    return response as T; // Return valid data
   }
 
   public setBalance(balance: Balance): void {

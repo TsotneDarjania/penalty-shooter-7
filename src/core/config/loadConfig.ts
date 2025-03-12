@@ -29,19 +29,23 @@ export type LoadConfigType = {
     background: AssetType;
     onAimLogo: AssetType;
     defaultWhiteImage: AssetType;
+    ballTexture: AssetType;
+    ballShadow: AssetType;
+    staticBall: AssetType;
+    greenSelector: AssetType;
+    ballArrows: AssetType;
+    defaultScoreIcon: AssetType;
+    scoresBackground: AssetType;
+    footballDoorTargetSVG: AssetType;
+    failScoreIcon: AssetType;
+    successScoreIcon: AssetType;
+    mouseRopeEffect: AssetType;
+    winCircle: AssetType;
+    loseCircle: AssetType;
   };
   animations: {
-    line: SpineAssetsType;
-    symbols: {
-      wine: SpineAssetsType;
-      crown: SpineAssetsType;
-      coin: SpineAssetsType;
-      ring_4: SpineAssetsType;
-      ring_3: SpineAssetsType;
-      ring_2: SpineAssetsType;
-      ring_1: SpineAssetsType;
-      arpa: SpineAssetsType;
-    };
+    footballDoor: SpineAssetsType;
+    character: SpineAssetsType;
   };
 };
 

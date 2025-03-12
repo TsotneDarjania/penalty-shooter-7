@@ -1,20 +1,34 @@
-import {Endpoint} from "../api.ts";
+import { Endpoint } from "../api.ts";
 
 export type GameInitData = {
-    betPrices: Array<{
-        betPriceId: number;
-        betAmount: number;
-        multiplier: number;
-        coin: string;
-    }>;
+  hasActiveGame: boolean;
+  gameConfigInfo: {
+    betPrices: Array<betType>;
+    kicksCount: number;
+  };
+  activeGameInfo: null | {
+    betPriceId: number;
+    coin: string;
+    currentKickIndex: number;
+    goalsScored: number;
+    kicksRemaining: number;
+    prizeId: number;
+    prizeValue: number;
+  };
 };
 
+export type betType = {
+  betPriceId: number;
+  betAmount: number;
+  multiplier: number;
+  coin: string;
+};
 
 export class InitialDataEndpoint extends Endpoint<GameInitData, undefined> {
-    constructor() {
-        super(undefined);
-    }
-    baseUrl?: string;
-    method: "GET" | "POST" = "GET";
-    path: string = `/GreekSlotApi/Game/InitialData`;
+  constructor() {
+    super(undefined);
+  }
+  baseUrl?: string;
+  method: "GET" | "POST" = "GET";
+  path: string = `/Game/InitialData`;
 }

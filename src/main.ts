@@ -1,9 +1,10 @@
-import { SlotGameManager } from "./core/managers/SlotGameManager.ts";
 import { setupEndpoints } from "./api/endpoints";
-// import {mockServer} from "./mock.ts";
+import { PenaltyGameManager } from "./core/managers/PenaltyGameManager";
+// import { mockServer } from "./mock.ts";
 
 (async () => {
   // mockServer();
+
   setupEndpoints();
 
   const GameContainer: HTMLElement = document.getElementById(
@@ -14,7 +15,7 @@ import { setupEndpoints } from "./api/endpoints";
   ) as HTMLElement;
 
   // BOSS 😎
-  await SlotGameManager.createInstance({
+  await PenaltyGameManager.createInstance({
     gameContainer: GameContainer,
     uiContainer: UIContainer,
   });

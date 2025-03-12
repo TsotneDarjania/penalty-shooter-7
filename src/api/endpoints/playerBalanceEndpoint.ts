@@ -1,20 +1,19 @@
-import {Endpoint} from "../api.ts";
+import { Endpoint } from "../api.ts";
 
 export type PlayerBalance = {
-    balance: {
-        amount : number;
-        coin : string;
-        id : number;
-        promotionId: number;
-    }
+  balance: {
+    amount: number;
+    coin: string;
+    id: number;
+    promotionId: number;
+  };
 };
 
-
 export class PlayerBalanceEndpoint extends Endpoint<PlayerBalance, undefined> {
-    constructor() {
-        super(undefined);
-    }
-    baseUrl?: string = "https://st-hubapi.onaim.io";
-    method: "GET" | "POST" = "GET";
-    path: string = `/HubApi/Game/PlayerInCoinBalances`;
+  constructor() {
+    super(undefined);
+  }
+  baseUrl?: string = import.meta.env.VITE_API_BALANCE_URL;
+  method: "GET" | "POST" = "GET";
+  path: string = `/Game/PlayerInCoinBalances`;
 }
