@@ -71,6 +71,8 @@ export class PenaltyGameManager extends BaseGameManager {
 
   kickRemaining!: number;
 
+  isPlayAgain = false;
+
   goalKeeperJumpData!: {
     direction: "center" | "left" | "right";
     height: 0 | 1 | 2;
@@ -111,7 +113,7 @@ export class PenaltyGameManager extends BaseGameManager {
     this.initialData = await this.getInitialData();
 
     if (this.initialData.gameConfigInfo === undefined) {
-      this.ui.showNotification("Server Error", "somehting went wrong");
+      this.ui.showNotification("Server Error", "something went wrong");
       return;
     }
 
@@ -127,8 +129,21 @@ export class PenaltyGameManager extends BaseGameManager {
       this.selectedBetOption = this.initialData.gameConfigInfo.betPrices.find(
         (bet) => bet.betPriceId === this.initialData.activeGameInfo!.betPriceId
       )!;
+
+      document.getElementById("prize-bar")!.style.display = "block";
+      document.getElementById("prize_bar_text")!.innerHTML = `You can win ${
+        this.initialData.activeGameInfo!.prizeValue
+      }  ${this.initialData.activeGameInfo!.coin}`;
     } else {
       this.ui.showGameBlockShadow();
+      document.getElementById("welcome_popup")!.style.display = "block";
+      document.getElementById(
+        "welcome_popup_text"
+      )!.innerHTML = `Play penalty shoot-out against the goalkeeper, score ${
+        Math.floor(this.initialData.gameConfigInfo.kicksCount / 2) + 1
+      } out of ${
+        this.initialData.gameConfigInfo.kicksCount
+      } penalties and win amazing prizes!`;
 
       this.selectedBetOption = this.initialData!.gameConfigInfo.betPrices[0];
     }
@@ -151,12 +166,11 @@ export class PenaltyGameManager extends BaseGameManager {
     }
 
     this.gameView.addScoreIndicators(this.initialData);
-    // // DRAW UI
+    // DRAW UI
     this.ui.showUI();
     this.ui.setBalance(this.balance.amount);
     this.ui.setBetOptions(this.initialData.gameConfigInfo.betPrices);
 
-    // this.ui.openWelcomePopUp("Hi There");
     this.gameView.hideLoadingScreen();
     this.addEventListeners();
   }
@@ -164,28 +178,31 @@ export class PenaltyGameManager extends BaseGameManager {
   addEventListeners() {
     // User Clicked play Button
     this.ui.elements.placeBetButton!.addEventListener("pointerdown", () => {
-      this.ui.hideGameBlockShadow();
-      this.placaBet();
-      this.ui.userCanBet = false;
-      document.getElementById("bet-section")!.style.opacity = "0.5";
-      this.ui.elements.placeBetButton!.style.display = "none";
-
-      setTimeout(() => {
-        this.gameStatus = "playing";
-      }, 200);
-    });
-
-    // Click Resume Button
-    document
-      .getElementById("resume_button")!
-      .addEventListener("pointerdown", () => {
+      if (this.isPlayAgain) {
+        document.getElementById("last_popup")!.style.display = "none";
         this.ui.hideGameBlockShadow();
-        this.ui.hideResumeButton();
+        document.getElementById("bet-section")!.style.opacity = "0.5";
+        this.ui.elements.placeBetButton!.style.display = "none";
+        this.placaBet();
+        this.ui.userCanBet = false;
+        this.playerScore = 0;
+        this.gameView.scoreIndicators.reset();
+        setTimeout(() => {
+          this.gameStatus = "playing";
+        }, 200);
+      } else {
+        this.ui.hideGameBlockShadow();
+        this.placaBet();
+        this.ui.userCanBet = false;
+        document.getElementById("bet-section")!.style.opacity = "0.5";
+        this.ui.elements.placeBetButton!.style.display = "none";
+        document.getElementById("welcome_popup")!.style.display = "none";
 
         setTimeout(() => {
           this.gameStatus = "playing";
-        }, 50);
-      });
+        }, 200);
+      }
+    });
 
     // player Clicked ball
     // const ballEventTarget = document.createElement("div");
@@ -297,18 +314,33 @@ export class PenaltyGameManager extends BaseGameManager {
         // Check If Win Game
         if (this.playerScore >= requiredGoalsToWin) {
           console.log("You Won!");
+          this.isPlayAgain = true;
           this.gameStatus = "prepare";
           this.ui.showGameBlockShadow();
-          document.getElementById("play_again_button")!.style.display = "flex";
+          document.getElementById("place_bet_button")!.style.display = "flex";
+          document.getElementById("prize-bar")!.style.display = "none";
 
+          document.getElementById("last_popup")!.style.display = "block";
+          document.getElementById("last_popup_text")!.innerHTML = `You Won!`;
+          this.ui.userCanBet = true;
+          document.getElementById("bet-section")!.style.opacity = "1";
           // window.location.reload();
         }
 
         if (this.kickRemaining + this.playerScore < requiredGoalsToWin) {
           console.log("You Lost!");
+          this.isPlayAgain = true;
           this.gameStatus = "prepare";
           this.ui.showGameBlockShadow();
-          document.getElementById("play_again_button")!.style.display = "flex";
+          document.getElementById("place_bet_button")!.style.display = "flex";
+          document.getElementById("prize-bar")!.style.display = "none";
+
+          document.getElementById("last_popup")!.style.display = "block";
+          document.getElementById("last_popup_text")!.innerHTML =
+            "You fell short this time. Give another try!";
+
+          this.ui.userCanBet = true;
+          document.getElementById("bet-section")!.style.opacity = "1";
           // window.location.reload();
         }
       }
@@ -432,8 +464,18 @@ export class PenaltyGameManager extends BaseGameManager {
       this.selectedBetOption.betPriceId
     );
 
-    console.log(this.selectedBetOption);
-    console.log(res);
+    document.getElementById("prize-bar")!.style.display = "block";
+    document.getElementById("prize_bar_text")!.innerHTML = `You can win ${
+      res.prizeValue
+    }  ${res!.coin}`;
+
+    if (res.prizeId === undefined || null) {
+      this.ui.showGameBlockShadow();
+      this.ui.showNotification("Server Error", "prize value is undefined");
+    }
+
+    // console.log(this.selectedBetOption);
+    // console.log(res);
   }
 
   private async createGame(GameContainer: HTMLElement): Promise<void> {
