@@ -1,81 +1,89 @@
 import { Howl } from "howler";
 
 export class AudioManager {
-    private static instance: AudioManager;
-    private audioMap: Map<string, Howl> = new Map();
-    private backgroundMusic?: Howl;
-    private isMuted: boolean = true;
-    private startedAudio: boolean = false;
+  theme!: Howl;
+  ballShoot!: Howl;
+  saveCenter!: Howl;
+  saveleft!: Howl;
+  saveRight!: Howl;
+  goalRight!: Howl;
+  goalLeft!: Howl;
+  goalCenter!: Howl;
 
-    private constructor(audioList: Record<string, string>) {
-        this.initializeAudio(audioList);
-    }
+  constructor() {
+    this.init();
+  }
 
-    private initializeAudio(audioList: Record<string, string>): void {
-        for (const key in audioList) {
-            if (audioList.hasOwnProperty(key)) {
-                const sound = new Howl({ src: [audioList[key]], loop: key === "theme" || key === "drySpin" });
-                this.audioMap.set(key, sound); // Store by name
+  init() {
+    this.theme = new Howl({
+      src: GameAssets.music.theme,
+      autoplay: false,
+      volume: 0,
+      loop: true,
+    });
 
-                if (key === "theme") {
-                    this.backgroundMusic = sound;
-                }
-            }
-        }
-        console.log(audioList);
-    }
+    this.theme.play();
 
-    public static createInstance(audioList: Record<string, string>): AudioManager {
-        if (!this.instance) {
-            this.instance = new AudioManager(audioList);
-        }
-        return this.instance;
-    }
+    this.ballShoot = new Howl({
+      src: GameAssets.music.ballShoot,
+      autoplay: false,
+      volume: 0,
+    });
 
-    public playSound(name: string): void {
-        const sound = this.audioMap.get(name);
-        if (sound) {
-            sound.play();
-            sound.volume(this.isMuted ? 0 : 1);
-        }
-    }
+    this.saveCenter = new Howl({
+      src: GameAssets.music.saveCenter,
+      autoplay: false,
+      volume: 0,
+    });
 
-    public stopSound(name: string): void {
-        const sound = this.audioMap.get(name);
-        if (sound) {
-            sound.stop();
-        }
-    }
+    this.saveleft = new Howl({
+      src: GameAssets.music.saveLeft,
+      autoplay: false,
+      volume: 0,
+    });
 
-    public toggleMute(): void {
-        this.audioMap.forEach(sound => {
-            sound.volume(this.isMuted ? 0 : 1);
-        });
-    }
+    this.saveRight = new Howl({
+      src: GameAssets.music.saveRight,
+      autoplay: false,
+      volume: 0,
+    });
 
-    public playBackgroundMusic(): void {
-        if(!this.startedAudio){
-            this.startedAudio = true;
-            this.isMuted = false;
-            this.backgroundMusic!.play();
-            this.toggleMute();
-        }
+    this.goalRight = new Howl({
+      src: GameAssets.music.goalRight,
+      autoplay: false,
+      volume: 0,
+    });
+    this.goalLeft = new Howl({
+      src: GameAssets.music.goalLeft,
+      autoplay: false,
+      volume: 0,
+    });
+    this.goalCenter = new Howl({
+      src: GameAssets.music.goalCenter,
+      autoplay: false,
+      volume: 0,
+    });
+  }
 
-        if (this.isMuted) {
-            this.isMuted = false;
-            this.backgroundMusic?.volume(1);
-        }
-    }
+  muteAllSound() {
+    this.theme.volume(0);
+    this.ballShoot.volume(0);
+    this.saveCenter.volume(0);
+    this.saveleft.volume(0);
+    this.saveRight.volume(0);
+    this.goalCenter.volume(0);
+    this.goalLeft.volume(0);
+    this.goalRight.volume(0);
+  }
 
-    public stopBackgroundMusic(): void {
-        if (!this.isMuted) {
-            this.isMuted = true;
-            this.backgroundMusic!.volume(0);
-            this.toggleMute();
-        }
-    }
-
-    public get isBackgroundPlaying(): boolean {
-        return (this.backgroundMusic?.volume() === 1 && this.startedAudio);
-    }
+  unMuteAllSound() {
+    this.theme.volume(1);
+    this.ballShoot.volume(1);
+    this.saveCenter.volume(1);
+    this.saveleft.volume(1);
+    this.saveRight.volume(1);
+    this.goalCenter.volume(1);
+    this.goalLeft.volume(1);
+    this.goalRight.volume(1);
+  }
 }

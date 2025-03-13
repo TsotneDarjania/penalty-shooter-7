@@ -12,29 +12,47 @@ export const assets: LoadConfigType = {
         loop: true,
       },
     },
-    stopSpin: {
-      src: "/assets/musics/stopSpin.wav",
-      data: {},
+    ballShoot: {
+      src: "/assets/musics/ball-shoot.wav",
+      data: {
+        loop: true,
+      },
     },
-    spin: {
-      src: "/assets/musics/UI/spin.wav",
-      data: {},
+    saveCenter: {
+      src: "/assets/musics/save-center.wav",
+      data: {
+        loop: true,
+      },
     },
-    drySpin: {
-      src: "/assets/musics/dryspin.wav",
-      data: {},
+    saveLeft: {
+      src: "/assets/musics/save-left.wav",
+      data: {
+        loop: true,
+      },
     },
-    reelDrop: {
-      src: "/assets/musics/reeldrop.wav",
-      data: {},
+    saveRight: {
+      src: "/assets/musics/save-right.wav",
+      data: {
+        loop: true,
+      },
     },
-    uiOtherButtons: {
-      src: "/assets/musics/UI/buttons.wav",
-      data: {},
+    goalRight: {
+      src: "/assets/musics/goalright.wav",
+      data: {
+        loop: true,
+      },
     },
-    win: {
-      src: "/assets/musics/win.wav",
-      data: {},
+    goalLeft: {
+      src: "/assets/musics/goalleft.wav",
+      data: {
+        loop: true,
+      },
+    },
+    goalCenter: {
+      src: "/assets/musics/goalcenter.wav",
+      data: {
+        loop: true,
+      },
     },
   },
   video: {

@@ -14,12 +14,13 @@ type AssetsType = ReplaceAssetTypeWithString<LoadConfigType>;
 export type LoadConfigType = {
   music: {
     theme: AssetType;
-    reelDrop: AssetType;
-    drySpin: AssetType;
-    stopSpin: AssetType;
-    uiOtherButtons: AssetType;
-    win: AssetType;
-    spin: AssetType;
+    ballShoot: AssetType;
+    saveCenter: AssetType;
+    saveLeft: AssetType;
+    saveRight: AssetType;
+    goalRight: AssetType;
+    goalLeft: AssetType;
+    goalCenter: AssetType;
   };
   video: {
     background: AssetType;

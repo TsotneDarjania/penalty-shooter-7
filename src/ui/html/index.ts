@@ -10,6 +10,8 @@ export class HtmlUI {
 
   userCanBet = true;
 
+  isMuted = true;
+
   public elements = {
     container: null as HTMLElement | null,
     playerPanelContainer: null as HTMLElement | null,
@@ -70,11 +72,13 @@ export class HtmlUI {
   }
 
   private bindEvents(): void {
-    if (this.elements.soundButton) {
-      this.elements.soundButton.addEventListener("click", () =>
-        this.toggleSound()
-      );
-    }
+    console.log("bined evenets");
+    console.log(this.elements.soundButton);
+
+    this.elements.soundButton!.addEventListener("pointerdown", () => {
+      this.toggleSound();
+    });
+
     if (this.elements.navSection) {
       this.elements.navSection.addEventListener("click", () =>
         this.toggleNavSection()
@@ -91,8 +95,6 @@ export class HtmlUI {
         .querySelector("div.flex")
         ?.addEventListener("click", () => this.toggleBetOptions());
     }
-
-    document.addEventListener("keydown", this.handleSoundKey.bind(this));
   }
 
   private cacheElements(): void {
@@ -341,5 +343,14 @@ export class HtmlUI {
 
   public toggleSound(): void {
     this.eventEmitter.emit(UIEvents.TOGGLE_SOUND);
+
+    if (this.isMuted) {
+      this.elements.soundButtonImg!.src = "assets/sound-button-on.png";
+      this.isMuted = false;
+      return;
+    } else {
+      this.elements.soundButtonImg!.src = "assets/sound-button-off.png";
+      this.isMuted = true;
+    }
   }
 }

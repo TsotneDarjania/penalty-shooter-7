@@ -14,12 +14,7 @@ import {
 import { AudioManager } from "./AudioManager.ts";
 import { ISlotGameManagerInstance } from "./interfaces/index.ts";
 import { BetDataEndpoint } from "../../api/endpoints/placeBetEndpoint.ts";
-import { pointsType } from "../game/doorTargetPoints/index.ts";
-import {
-  createKey,
-  findClosestPoint,
-  getRandomIntInRange,
-} from "../game/helper/index.ts";
+import { findClosestPoint } from "../game/helper/index.ts";
 import { UIEvents } from "../../ui/html/enums/index.ts";
 import { PenaltyKickEndpoint } from "../../api/endpoints/penaltyKickEndpoint.ts";
 import { Point, Sprite, Texture } from "pixi.js";
@@ -82,6 +77,8 @@ export class PenaltyGameManager extends BaseGameManager {
 
   playerBalance!: PlayerBalance;
 
+  isMuted = true;
+
   private constructor() {
     super();
   }
@@ -115,7 +112,7 @@ export class PenaltyGameManager extends BaseGameManager {
     this.setBalance(this.playerBalance.balance);
     // Wait for assets to load (Game assets)
     await this.gameView.startLoadingAssets();
-    this.audioManager = AudioManager.createInstance(GameAssets.music);
+    this.audioManager = new AudioManager();
     this.initialData = await this.getInitialData();
 
     if (this.initialData.gameConfigInfo === undefined) {
@@ -186,6 +183,17 @@ export class PenaltyGameManager extends BaseGameManager {
       this.ui.hideGameBlockShadow();
       document.getElementById("welcome_popup")!.style.display = "none";
       document.getElementById("last_popup")!.style.display = "none";
+    });
+
+    this.ui.eventEmitter.on(UIEvents.TOGGLE_SOUND, () => {
+      if (this.isMuted) {
+        this.audioManager.unMuteAllSound();
+        this.isMuted = false;
+        return;
+      } else {
+        this.isMuted = true;
+        this.audioManager.muteAllSound();
+      }
     });
 
     // User Clicked play Button
@@ -271,6 +279,28 @@ export class PenaltyGameManager extends BaseGameManager {
     this.gameView.ball.eventEmitter.on(
       GameEventEnums.ballTouchGoalKeeperOrGrid,
       () => {
+        if (this.isWin) {
+          if (this.userSelectedPoints[0] === 1) {
+            this.audioManager.goalCenter.play();
+          }
+          if (this.userSelectedPoints[0] === 0) {
+            this.audioManager.goalLeft.play();
+          }
+          if (this.userSelectedPoints[0] === 2) {
+            this.audioManager.goalRight.play();
+          }
+        } else {
+          if (this.userSelectedPoints[0] === 1) {
+            this.audioManager.saveCenter.play();
+          }
+          if (this.userSelectedPoints[0] === 0) {
+            this.audioManager.saveleft.play();
+          }
+          if (this.userSelectedPoints[0] === 2) {
+            this.audioManager.saveRight.play();
+          }
+        }
+
         this.isWin &&
           this.gameView.footballDoor!.playGridAnimation(
             this.userSelectedPoints
@@ -459,7 +489,10 @@ export class PenaltyGameManager extends BaseGameManager {
           .failGoalKeeperJumpData
       : this.gameView.doorTargets.points.get(selectedPoint[0])!
           .succesGoalKeeperJumpData;
+
+    this.audioManager.ballShoot.play();
   }
+
   determineBallDownPath(isWin: boolean, selectedPoint: SelectedPointType) {
     this.gameView.ball!.ballFallinDownRawPathData = {
       path: !isWin
@@ -495,9 +528,6 @@ export class PenaltyGameManager extends BaseGameManager {
       this.ui.showGameBlockShadow();
       this.ui.showNotification("Server Error", "prize value is undefined");
     }
-
-    // console.log(this.selectedBetOption);
-    // console.log(res);
   }
 
   private async createGame(GameContainer: HTMLElement): Promise<void> {
@@ -510,15 +540,5 @@ export class PenaltyGameManager extends BaseGameManager {
 
   async getInitialData(): Promise<GameInitData> {
     return await Api.call(InitialDataEndpoint);
-  }
-
-  private handleSoundButton(): void {
-    if (this.audioManager.isBackgroundPlaying) {
-      this.audioManager.stopBackgroundMusic();
-      this.ui.updateSoundButtonImage(false); // Update UI
-    } else {
-      this.audioManager.playBackgroundMusic();
-      this.ui.updateSoundButtonImage(true); // Update UI
-    }
   }
 }
