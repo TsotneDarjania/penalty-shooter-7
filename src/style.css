@@ -163,7 +163,7 @@ body {
   margin: auto;
   left: 0;
   right: 0;
-  top: -60%;
+  top: -80%;
   bottom: 0;
 }
 
@@ -177,10 +177,12 @@ body {
   width: 88%;
   height: min-content;
 
+  font-size: 22px;
+
   margin: auto;
   left: 0;
   right: 0;
-  top: -60%;
+  top: -80%;
   bottom: 0;
 }
 
@@ -205,6 +207,8 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
+
+  font-size: 22px;
 }
 
 #last_popup_text {
@@ -220,8 +224,10 @@ body {
   margin: auto;
   left: 0;
   right: 0;
-  top: -60%;
+  top: -80%;
   bottom: 0;
+
+  font-size: 22px;
 }
 
 /*#app {*/

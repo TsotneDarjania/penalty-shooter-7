@@ -73,10 +73,14 @@ export class PenaltyGameManager extends BaseGameManager {
 
   isPlayAgain = false;
 
+  userHasNotEnoughBalance = false;
+
   goalKeeperJumpData!: {
     direction: "center" | "left" | "right";
     height: 0 | 1 | 2;
   };
+
+  playerBalance!: PlayerBalance;
 
   private constructor() {
     super();
@@ -105,8 +109,10 @@ export class PenaltyGameManager extends BaseGameManager {
     this.gameView.showLoadingScreen();
     this.ui = HtmlUI.getInstance();
     this.ui.initialize(UIContainer, this.gameView);
-    const playerBalance = await this.getPlayerBalance();
-    this.setBalance(playerBalance.balance);
+
+    this.playerBalance = await this.getPlayerBalance();
+    this.playerBalance.balance.amount = 10;
+    this.setBalance(this.playerBalance.balance);
     // Wait for assets to load (Game assets)
     await this.gameView.startLoadingAssets();
     this.audioManager = AudioManager.createInstance(GameAssets.music);
@@ -131,7 +137,7 @@ export class PenaltyGameManager extends BaseGameManager {
       )!;
 
       document.getElementById("prize-bar")!.style.display = "block";
-      document.getElementById("prize_bar_text")!.innerHTML = `You can win ${
+      document.getElementById("prize_bar_text")!.innerHTML = `Prize : ${
         this.initialData.activeGameInfo!.prizeValue
       }  ${this.initialData.activeGameInfo!.coin}`;
     } else {
@@ -176,8 +182,22 @@ export class PenaltyGameManager extends BaseGameManager {
   }
 
   addEventListeners() {
+    window.addEventListener("pointerdown", () => {
+      this.ui.hideGameBlockShadow();
+      document.getElementById("welcome_popup")!.style.display = "none";
+      document.getElementById("last_popup")!.style.display = "none";
+    });
+
     // User Clicked play Button
     this.ui.elements.placeBetButton!.addEventListener("pointerdown", () => {
+      if (
+        this.playerBalance.balance.amount < this.selectedBetOption.betAmount
+      ) {
+        this.userHasNotEnoughBalance = true;
+      }
+
+      if (this.userHasNotEnoughBalance) return;
+
       if (this.isPlayAgain) {
         document.getElementById("last_popup")!.style.display = "none";
         this.ui.hideGameBlockShadow();
@@ -314,6 +334,7 @@ export class PenaltyGameManager extends BaseGameManager {
         // Check If Win Game
         if (this.playerScore >= requiredGoalsToWin) {
           console.log("You Won!");
+          this.gameView.scoreIndicators.reset();
           this.isPlayAgain = true;
           this.gameStatus = "prepare";
           this.ui.showGameBlockShadow();
@@ -329,6 +350,7 @@ export class PenaltyGameManager extends BaseGameManager {
 
         if (this.kickRemaining + this.playerScore < requiredGoalsToWin) {
           console.log("You Lost!");
+          this.gameView.scoreIndicators.reset();
           this.isPlayAgain = true;
           this.gameStatus = "prepare";
           this.ui.showGameBlockShadow();
@@ -465,7 +487,7 @@ export class PenaltyGameManager extends BaseGameManager {
     );
 
     document.getElementById("prize-bar")!.style.display = "block";
-    document.getElementById("prize_bar_text")!.innerHTML = `You can win ${
+    document.getElementById("prize_bar_text")!.innerHTML = `Prize : ${
       res.prizeValue
     }  ${res!.coin}`;
 
