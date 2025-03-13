@@ -111,7 +111,7 @@ export class PenaltyGameManager extends BaseGameManager {
     this.ui.initialize(UIContainer, this.gameView);
 
     this.playerBalance = await this.getPlayerBalance();
-    this.playerBalance.balance.amount = 10;
+
     this.setBalance(this.playerBalance.balance);
     // Wait for assets to load (Game assets)
     await this.gameView.startLoadingAssets();
