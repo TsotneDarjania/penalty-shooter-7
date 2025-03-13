@@ -185,7 +185,6 @@ export class GameView extends PixiApplication {
     this.gameElement!.appendChild(this.canvas);
 
     window.addEventListener("resize", () => {
-      console.log(this.gameElement.clientWidth);
       this.width = this.gameElement.clientWidth;
       this.height = this.gameElement.clientHeight;
       this.destroyGame();

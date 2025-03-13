@@ -21,6 +21,8 @@ export type LoadConfigType = {
     goalRight: AssetType;
     goalLeft: AssetType;
     goalCenter: AssetType;
+    lose: AssetType;
+    win: AssetType;
   };
   video: {
     background: AssetType;

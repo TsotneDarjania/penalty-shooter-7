@@ -207,6 +207,7 @@ export class PenaltyGameManager extends BaseGameManager {
       if (this.userHasNotEnoughBalance) return;
 
       if (this.isPlayAgain) {
+        this.gameView.ball.reset();
         document.getElementById("last_popup")!.style.display = "none";
         this.ui.hideGameBlockShadow();
         document.getElementById("bet-section")!.style.opacity = "0.5";
@@ -352,7 +353,6 @@ export class PenaltyGameManager extends BaseGameManager {
         }
 
         this.gameView.character.reset();
-        this.gameView.ball.reset();
 
         setTimeout(() => {
           this.isShootCommand = false;
@@ -371,10 +371,15 @@ export class PenaltyGameManager extends BaseGameManager {
           document.getElementById("place_bet_button")!.style.display = "flex";
           document.getElementById("prize-bar")!.style.display = "none";
 
-          document.getElementById("last_popup")!.style.display = "block";
-          document.getElementById("last_popup_text")!.innerHTML = `You Won!`;
+          setTimeout(() => {
+            this.audioManager.win.play();
+            document.getElementById("last_popup")!.style.display = "block";
+            document.getElementById("last_popup_text")!.innerHTML = `You Won!`;
+          }, 500);
+
           this.ui.userCanBet = true;
           document.getElementById("bet-section")!.style.opacity = "1";
+          return;
           // window.location.reload();
         }
 
@@ -387,14 +392,20 @@ export class PenaltyGameManager extends BaseGameManager {
           document.getElementById("place_bet_button")!.style.display = "flex";
           document.getElementById("prize-bar")!.style.display = "none";
 
-          document.getElementById("last_popup")!.style.display = "block";
-          document.getElementById("last_popup_text")!.innerHTML =
-            "You fell short this time. Give another try!";
+          setTimeout(() => {
+            this.audioManager.lose.play();
+            document.getElementById("last_popup")!.style.display = "block";
+            document.getElementById("last_popup_text")!.innerHTML =
+              "You fell short this time. Give another try!";
+          }, 500);
 
           this.ui.userCanBet = true;
           document.getElementById("bet-section")!.style.opacity = "1";
+          return;
           // window.location.reload();
         }
+
+        this.gameView.ball.reset();
       }
     );
 

@@ -54,6 +54,18 @@ export const assets: LoadConfigType = {
         loop: true,
       },
     },
+    lose: {
+      src: "/assets/musics/lose.wav",
+      data: {
+        loop: true,
+      },
+    },
+    win: {
+      src: "/assets/musics/win.wav",
+      data: {
+        loop: true,
+      },
+    },
   },
   video: {
     background: {

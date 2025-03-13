@@ -9,6 +9,8 @@ export class AudioManager {
   goalRight!: Howl;
   goalLeft!: Howl;
   goalCenter!: Howl;
+  lose!: Howl;
+  win!: Howl;
 
   constructor() {
     this.init();
@@ -63,6 +65,17 @@ export class AudioManager {
       autoplay: false,
       volume: 0,
     });
+
+    this.lose = new Howl({
+      src: GameAssets.music.lose,
+      autoplay: false,
+      volume: 0,
+    });
+    this.win = new Howl({
+      src: GameAssets.music.win,
+      autoplay: false,
+      volume: 0,
+    });
   }
 
   muteAllSound() {
@@ -74,6 +87,8 @@ export class AudioManager {
     this.goalCenter.volume(0);
     this.goalLeft.volume(0);
     this.goalRight.volume(0);
+    this.lose.volume(0);
+    this.win.volume(0);
   }
 
   unMuteAllSound() {
@@ -85,5 +100,7 @@ export class AudioManager {
     this.goalCenter.volume(1);
     this.goalLeft.volume(1);
     this.goalRight.volume(1);
+    this.lose.volume(1);
+    this.win.volume(1);
   }
 }
