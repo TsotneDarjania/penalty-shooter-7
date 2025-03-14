@@ -40,8 +40,8 @@ export class ScoreIndicators extends Container {
       this.gameView.getScaledY(0.2)
     );
     // backgroundImage.width = 0;
-    backgroundImage.scale.x = this.gameView.setScale(0.29);
-    backgroundImage.scale.y = this.gameView.setScale(0.32);
+    backgroundImage.scale.x = this.gameView.setScale(0.52);
+    backgroundImage.scale.y = this.gameView.setScale(0.46);
     this.gameView.add(backgroundImage);
     this.displayKicks();
 
@@ -70,7 +70,7 @@ export class ScoreIndicators extends Container {
       Texture.from(GameAssets.images.successScoreIcon)
     );
     this.greenScores.push(greenScore);
-    greenScore.scale = this.gameView.setScale(0.05);
+    greenScore.scale = this.gameView.setScale(0.07);
     greenScore.anchor = 0.5;
 
     const points = this.kicks[this.kickIndicator];
@@ -86,7 +86,7 @@ export class ScoreIndicators extends Container {
     const redScore = new Sprite(Texture.from(GameAssets.images.failScoreIcon));
     this.redScores.push(redScore);
 
-    redScore.scale = this.gameView.setScale(0.05);
+    redScore.scale = this.gameView.setScale(0.07);
     redScore.anchor = 0.5;
 
     const points = this.kicks[this.kickIndicator];
@@ -112,7 +112,7 @@ export class ScoreIndicators extends Container {
       );
       kickImage_1.x = this.gameView.getScaledX(0.3);
       kickImage_1.y = this.gameView.getScaledY(0.2);
-      kickImage_1.scale = this.gameView.getScaledX(0.37);
+      kickImage_1.scale = this.gameView.getScaledX(0.47);
       kickImage_1.anchor = 0.5;
       this.gameView.add(kickImage_1);
       this.kicks.push(kickImage_1);
@@ -122,7 +122,7 @@ export class ScoreIndicators extends Container {
       );
       kickImage_2.x = this.gameView.getScaledX(0.5);
       kickImage_2.y = this.gameView.getScaledY(0.2);
-      kickImage_2.scale = this.gameView.setScale(0.37);
+      kickImage_2.scale = this.gameView.setScale(0.47);
       kickImage_2.anchor = 0.5;
       this.gameView.add(kickImage_2);
       this.kicks.push(kickImage_2);
@@ -132,7 +132,7 @@ export class ScoreIndicators extends Container {
       );
       kickImage_3.x = this.gameView.getScaledX(0.7);
       kickImage_3.y = this.gameView.getScaledY(0.2);
-      kickImage_3.scale = this.gameView.setScale(0.37);
+      kickImage_3.scale = this.gameView.setScale(0.47);
       kickImage_3.anchor = 0.5;
       this.gameView.add(kickImage_3);
       this.kicks.push(kickImage_3);
@@ -144,7 +144,7 @@ export class ScoreIndicators extends Container {
       );
       kickImage_1.x = this.gameView.getScaledX(0.43);
       kickImage_1.y = this.gameView.getScaledY(0.2);
-      kickImage_1.scale = this.gameView.setScale(0.37);
+      kickImage_1.scale = this.gameView.setScale(0.47);
       kickImage_1.anchor = 0.5;
       this.gameView.add(kickImage_1);
       this.kicks.push(kickImage_1);
@@ -154,7 +154,7 @@ export class ScoreIndicators extends Container {
       );
       kickImage_2.x = this.gameView.getScaledX(0.57);
       kickImage_2.y = this.gameView.getScaledY(0.2);
-      kickImage_2.scale = this.gameView.setScale(0.37);
+      kickImage_2.scale = this.gameView.setScale(0.47);
       kickImage_2.anchor = 0.5;
       this.gameView.add(kickImage_2);
       this.kicks.push(kickImage_2);
@@ -166,7 +166,7 @@ export class ScoreIndicators extends Container {
       );
       kickImage_1.x = this.gameView.getScaledX(0.5);
       kickImage_1.y = this.gameView.getScaledY(0.2);
-      kickImage_1.scale = this.gameView.setScale(0.37);
+      kickImage_1.scale = this.gameView.setScale(0.47);
       kickImage_1.anchor = 0.5;
       this.gameView.add(kickImage_1);
       this.kicks.push(kickImage_1);
@@ -178,7 +178,7 @@ export class ScoreIndicators extends Container {
       );
       kickImage_1.x = this.gameView.getScaledX(0.3);
       kickImage_1.y = this.gameView.getScaledY(0.2);
-      kickImage_1.scale = this.gameView.setScale(0.37);
+      kickImage_1.scale = this.gameView.setScale(0.47);
       kickImage_1.anchor = 0.5;
       this.gameView.add(kickImage_1);
       this.kicks.push(kickImage_1);
@@ -188,7 +188,7 @@ export class ScoreIndicators extends Container {
       );
       kickImage_2.x = this.gameView.getScaledX(0.433);
       kickImage_2.y = this.gameView.getScaledY(0.2);
-      kickImage_2.scale = this.gameView.setScale(0.37);
+      kickImage_2.scale = this.gameView.setScale(0.47);
       kickImage_2.anchor = 0.5;
       this.gameView.add(kickImage_2);
       this.kicks.push(kickImage_2);
@@ -198,7 +198,7 @@ export class ScoreIndicators extends Container {
       );
       kickImage_3.x = this.gameView.getScaledX(0.565);
       kickImage_3.y = this.gameView.getScaledY(0.2);
-      kickImage_3.scale = this.gameView.setScale(0.37);
+      kickImage_3.scale = this.gameView.setScale(0.47);
       kickImage_3.anchor = 0.5;
       this.gameView.add(kickImage_3);
       this.kicks.push(kickImage_3);
@@ -208,7 +208,7 @@ export class ScoreIndicators extends Container {
       );
       kickImage_4.x = this.gameView.getScaledX(0.7);
       kickImage_4.y = this.gameView.getScaledY(0.2);
-      kickImage_4.scale = this.gameView.setScale(0.37);
+      kickImage_4.scale = this.gameView.setScale(0.47);
       kickImage_4.anchor = 0.5;
       this.gameView.add(kickImage_4);
       this.kicks.push(kickImage_4);
@@ -220,7 +220,7 @@ export class ScoreIndicators extends Container {
       );
       kickImage_1.x = this.gameView.getScaledX(0.26);
       kickImage_1.y = this.gameView.getScaledY(0.2);
-      kickImage_1.scale = this.gameView.setScale(0.37);
+      kickImage_1.scale = this.gameView.setScale(0.47);
       kickImage_1.anchor = 0.5;
       this.gameView.add(kickImage_1);
       this.kicks.push(kickImage_1);
@@ -230,7 +230,7 @@ export class ScoreIndicators extends Container {
       );
       kickImage_2.x = this.gameView.getScaledX(0.382);
       kickImage_2.y = this.gameView.getScaledY(0.2);
-      kickImage_2.scale = this.gameView.setScale(0.37);
+      kickImage_2.scale = this.gameView.setScale(0.47);
       kickImage_2.anchor = 0.5;
       this.gameView.add(kickImage_2);
       this.kicks.push(kickImage_2);
@@ -240,7 +240,7 @@ export class ScoreIndicators extends Container {
       );
       kickImage_3.x = this.gameView.getScaledX(0.5);
       kickImage_3.y = this.gameView.getScaledY(0.2);
-      kickImage_3.scale = this.gameView.setScale(0.37);
+      kickImage_3.scale = this.gameView.setScale(0.47);
       kickImage_3.anchor = 0.5;
       this.gameView.add(kickImage_3);
       this.kicks.push(kickImage_3);
@@ -250,7 +250,7 @@ export class ScoreIndicators extends Container {
       );
       kickImage_4.x = this.gameView.getScaledX(0.623);
       kickImage_4.y = this.gameView.getScaledY(0.2);
-      kickImage_4.scale = this.gameView.setScale(0.37);
+      kickImage_4.scale = this.gameView.setScale(0.47);
       kickImage_4.anchor = 0.5;
       this.gameView.add(kickImage_4);
       this.kicks.push(kickImage_4);
@@ -260,7 +260,7 @@ export class ScoreIndicators extends Container {
       );
       kickImage_5.x = this.gameView.getScaledX(0.744);
       kickImage_5.y = this.gameView.getScaledY(0.2);
-      kickImage_5.scale = this.gameView.setScale(0.37);
+      kickImage_5.scale = this.gameView.setScale(0.47);
       kickImage_5.anchor = 0.5;
       this.gameView.add(kickImage_5);
       this.kicks.push(kickImage_5);

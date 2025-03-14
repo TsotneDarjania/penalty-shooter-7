@@ -96,7 +96,7 @@ export class GameView extends PixiApplication {
     this.ball = new Ball(
       this.getScaledX(0.5),
       this.getScaledY(0.88),
-      this.setScale(3.5),
+      this.setScale(5.5),
       this
     );
     this.ball.zIndex = 1000;
@@ -105,7 +105,7 @@ export class GameView extends PixiApplication {
 
   addFootballDoor() {
     this.footballDoor = new FootballDoor();
-    this.footballDoor.scale = this.setScale(1.49);
+    this.footballDoor.scale = this.setScale(2.8);
     this.footballDoor.x = this.getScaledX(0.5);
     this.footballDoor.y = this.getPositionY(0.405);
     this.add(this.footballDoor);
@@ -147,7 +147,7 @@ export class GameView extends PixiApplication {
   }
 
   private addBackground() {
-    this.background = new Sprite(Texture.from(GameAssets.images.background));
+    this.background = new Sprite(Texture.from(GameAssets.video.background));
     this.background.width = this.width;
     this.background.height = this.height;
     this.add(this.background);

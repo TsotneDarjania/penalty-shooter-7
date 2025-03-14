@@ -159,16 +159,16 @@ export class PenaltyGameManager extends BaseGameManager {
     this.gameView.showGame();
 
     this.ui.elements.placeBetButton!.style.width = `${this.gameView.setScale(
-      120
+      240
     )}px`;
     this.ui.elements.placeBetButton!.style.height = `${this.gameView.setScale(
-      120
+      240
     )}px`;
     this.ui.elements.placeBetButton!.style.left = `${this.gameView.getPositionX(
-      0.394
+      0.39
     )}px`;
     this.ui.elements.placeBetButton!.style.bottom = `${this.gameView.getPositionY(
-      0.061
+      0.058
     )}px`;
     if (this.initialData.hasActiveGame === false) {
       this.ui.elements.placeBetButton!.style.display = "flex";

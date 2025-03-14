@@ -56,7 +56,7 @@ export class BallGraphic {
     this.shadow.y = 13;
 
     this.shadow.scale = isMobile
-      ? this.gameView.setScale(0.11)
+      ? this.gameView.setScale(0.21)
       : this.gameView.setScale(0);
     this.shadow.zIndex = 0;
 
