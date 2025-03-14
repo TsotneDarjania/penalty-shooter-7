@@ -163,7 +163,20 @@ body {
   margin: auto;
   left: 0;
   right: 0;
-  top: -80%;
+  top: -10%;
+  bottom: 0;
+}
+#last_popup_bck {
+  position: absolute;
+
+  z-index: 1000;
+
+  width: 90%;
+
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: -10%;
   bottom: 0;
 }
 
@@ -174,7 +187,7 @@ body {
 
   z-index: 1000;
 
-  width: 88%;
+  width: 70%;
   height: min-content;
 
   font-size: 22px;
@@ -182,13 +195,13 @@ body {
   margin: auto;
   left: 0;
   right: 0;
-  top: -80%;
+  top: -10%;
   bottom: 0;
 }
 
 #prize_bar_bck {
   position: absolute;
-  width: 90%;
+  width: 45%;
 
   margin: auto;
   top: 10px;
@@ -203,7 +216,7 @@ body {
   text-align: center;
 
   margin: auto;
-  top: -89%;
+  top: -72.5%;
   bottom: 0;
   left: 0;
   right: 0;
@@ -224,7 +237,7 @@ body {
   margin: auto;
   left: 0;
   right: 0;
-  top: -80%;
+  top: -10%;
   bottom: 0;
 
   font-size: 22px;

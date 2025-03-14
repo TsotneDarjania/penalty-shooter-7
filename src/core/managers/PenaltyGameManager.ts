@@ -79,6 +79,9 @@ export class PenaltyGameManager extends BaseGameManager {
 
   isMuted = true;
 
+  prizeValue!: number;
+  prizeCoin!: string;
+
   private constructor() {
     super();
   }
@@ -121,6 +124,9 @@ export class PenaltyGameManager extends BaseGameManager {
     }
 
     if (this.initialData.hasActiveGame) {
+      this.prizeValue = this.initialData.activeGameInfo!.prizeValue;
+      this.prizeCoin = this.initialData.activeGameInfo!.coin;
+
       this.playerScore = this.initialData.activeGameInfo!.goalsScored;
       setTimeout(() => {
         this.gameStatus = "playing";
@@ -373,8 +379,14 @@ export class PenaltyGameManager extends BaseGameManager {
 
           setTimeout(() => {
             this.audioManager.win.play();
+            (
+              document.getElementById("last_popup_bck")! as HTMLImageElement
+            ).src = "assets/images/you-won-background.png";
             document.getElementById("last_popup")!.style.display = "block";
-            document.getElementById("last_popup_text")!.innerHTML = `You Won!`;
+
+            document.getElementById(
+              "last_popup_text"
+            )!.innerHTML = `${this.prizeValue} ${this.prizeCoin}`;
           }, 500);
 
           this.ui.userCanBet = true;
@@ -394,7 +406,11 @@ export class PenaltyGameManager extends BaseGameManager {
 
           setTimeout(() => {
             this.audioManager.lose.play();
+            (
+              document.getElementById("last_popup_bck")! as HTMLImageElement
+            ).src = "assets/images/welcome-popup.png";
             document.getElementById("last_popup")!.style.display = "block";
+
             document.getElementById("last_popup_text")!.innerHTML =
               "You fell short this time. Give another try!";
           }, 500);
@@ -530,14 +546,21 @@ export class PenaltyGameManager extends BaseGameManager {
       this.selectedBetOption.betPriceId
     );
 
+    this.prizeCoin = res!.coin;
+    this.prizeValue = res!.prizeValue;
+
     document.getElementById("prize-bar")!.style.display = "block";
     document.getElementById("prize_bar_text")!.innerHTML = `Prize : ${
       res.prizeValue
     }  ${res!.coin}`;
 
+    this.balance.amount -= this.selectedBetOption.betAmount;
+    this.ui.setBalance(this.balance.amount);
+
     if (res.prizeId === undefined || null) {
       this.ui.showGameBlockShadow();
       this.ui.showNotification("Server Error", "prize value is undefined");
+      this.userHasNotEnoughBalance = true;
     }
   }
 
