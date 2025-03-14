@@ -169,7 +169,7 @@ export class GameView extends PixiApplication {
     });
 
     this.width = this.gameElement.clientWidth;
-    this.height = this.gameElement.clientHeight;
+    this.height = window.innerHeight;
 
     await this.init({
       width: this.width,
