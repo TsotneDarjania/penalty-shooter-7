@@ -201,10 +201,10 @@ body {
 
 #prize_bar_bck {
   position: absolute;
-  width: 45%;
+  width: 37%;
 
   margin: auto;
-  top: 10px;
+  top: -10px;
   left: 0;
   right: 0;
 }
@@ -216,8 +216,8 @@ body {
   text-align: center;
 
   margin: auto;
-  top: -72.5%;
-  bottom: 0;
+  top: 78px;
+
   left: 0;
   right: 0;
 
