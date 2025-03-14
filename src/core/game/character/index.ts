@@ -23,7 +23,7 @@ export class Character extends Container {
       atlas: GameAssets.animations.character.skeleton,
     });
 
-    this.spine.scale = this.gameview.setScale(1.1);
+    this.spine.scale = this.gameview.setScale(1.24);
 
     this.spine.state.setAnimation(0, "Idle", true);
     this.addChild(this.spine);
